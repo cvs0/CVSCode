@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-explicit-any
 import {
     Stmt,
     Program,
@@ -29,6 +30,17 @@ export default class Parser {
         return prev;
     }
 
+    private expect (type: TokenType, err: any) {
+        const prev = this.tokens.shift() as Token;
+
+        if(!prev || prev.type == type) {
+            console.error("Parser Error:\n", err, prev, " - Expecting: ", type)
+            Deno.exit(1);
+        }
+
+        return prev;
+    }
+
     public produceAST(sourceCode: string): Program {
 
         this.tokens = tokenize(sourceCode);
@@ -52,7 +64,41 @@ export default class Parser {
     }
 
     private parse_expr (): Expr {
-        return this.parse_primary_expr();
+        return this.parse_additive_expr();
+    }
+
+    private parse_additive_expr (): Expr {
+        let left = this.parse_multiplicative_expr();
+
+        while (this.at().value == "+" || this.at().value == "-") {
+            const operator = this.eat().value;
+            const right = this.parse_multiplicative_expr();
+            left = {
+                kind: "BinaryExpr",
+                left,
+                right,
+                operator,
+            } as BinaryExpr;
+        }
+
+        return left;
+    }
+
+    private parse_multiplicative_expr (): Expr {
+        let left = this.parse_primary_expr();
+
+        while (this.at().value == "/" || this.at().value == "*" || this.at().value == "%") {
+            const operator = this.eat().value;
+            const right = this.parse_primary_expr();
+            left = {
+                kind: "BinaryExpr",
+                left,
+                right,
+                operator,
+            } as BinaryExpr;
+        }
+
+        return left;
     }
 
     // Orders of prescidence
@@ -75,7 +121,17 @@ export default class Parser {
                 return { kind: "Identifier", symbol: this.eat().value } as Identifier;
 
             case TokenType.Number:
-                return { kind: "NumericLiteral", value: parseFloat(this.eat().value) } as NumericLiteral;
+                return {
+                    kind: "NumericLiteral",
+                     value: parseFloat(this.eat().value)
+                } as NumericLiteral;
+
+            case TokenType.OpenParen: {
+                this.eat(); // eat the opening param
+                const value = this.parse_expr();
+                this.expect(TokenType.CloseParen, "Unexpected token found inside parenthesised experession. Expected closing parenthesis."); // closing param
+                return value
+            }
 
             default:
                 console.error("Unexpected token found during parsing!", this.at());
