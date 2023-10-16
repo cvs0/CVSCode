@@ -18,5 +18,10 @@ export function tokenize (sourceCode: string): Token[] {
     const tokens = new Array<Token>();
     const src = sourceCode.split("")
 
+    // Build each token until end of the file
+    while (src.length > 0) {
+        
+    }
+
     return tokens;
 }
