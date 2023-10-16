@@ -1,12 +1,18 @@
 
 export enum TokenType {
+    // Literal Types
     Number,
     Identifier,
+
+    // Keywords
+    Let,
+
+    // Grouping * Operators
+    BinaryOperator,
     Equals,
     OpenParen,
     CloseParen,
-    BinaryOperator,
-    Let,
+    EOF, // Signified the end of the file
 }
 
 const KEYWORDS: Record<string, TokenType> = {
@@ -91,6 +97,8 @@ export function tokenize (sourceCode: string): Token[] {
         }
     }
 
+    tokens.push({type: TokenType.EOF, value: "EndOfFile"});
+    
     return tokens;
 }
 const source = await Deno.readTextFile("./test.txt");
