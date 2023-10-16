@@ -79,10 +79,10 @@ export function tokenize (sourceCode: string): Token[] {
                     tokens.push(token(ident, reserved));
                 }
             } else if (isSkippable(src[0])) {
-                src.shift();
+                src.shift(); // skip current char
             } else {
                 console.log("Unrecognized character found in source: ", src[0]);
-                Deno.exit();
+                Deno.exit(1);
             }
         }
     }
