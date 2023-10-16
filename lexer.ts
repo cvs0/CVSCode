@@ -81,8 +81,12 @@ export function tokenize (sourceCode: string): Token[] {
             } else if (isSkippable(src[0])) {
                 src.shift(); // skip current char
             } else {
-                console.log("Unrecognized character found in source: ", src[0]);
-                Deno.exit(1);
+                console.error(
+					"Unreconized character found in source: ",
+					src[0].charCodeAt(0),
+					src[0]
+				);
+				Deno.exit(1);
             }
         }
     }
