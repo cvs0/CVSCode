@@ -55,6 +55,18 @@ export default class Parser {
         return this.parse_primary_expr();
     }
 
+    // Orders of prescidence
+    //
+    // AssignmentExpr
+    // MemberExpr
+    // FunctionCall
+    // LogicalExpr
+    // ComparisonExpr
+    // AdditiveExpr
+    // MultiplicativeExpr
+    // UnaryExpr
+    // PrimaryExpr
+
     private parse_primary_expr (): Expr {
         const tk = this.at().type;
 
