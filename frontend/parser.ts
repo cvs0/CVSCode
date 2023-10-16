@@ -33,7 +33,7 @@ export default class Parser {
     private expect (type: TokenType, err: any) {
         const prev = this.tokens.shift() as Token;
 
-        if(!prev || prev.type == type) {
+        if(!prev || prev.type != type) {
             console.error("Parser Error:\n", err, prev, " - Expecting: ", type)
             Deno.exit(1);
         }
