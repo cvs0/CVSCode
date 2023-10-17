@@ -1,9 +1,9 @@
-import { ValueTypes, RuntimeVal, NumberVal, NullVal } from "./values.ts"
+import { ValueTypes, RuntimeVal, NumberVal, NullVal, MK_NULL } from "./values.ts"
 import { BinaryExpr, Identifier, NodeType, NumericLiteral, Program, Stmt } from "../frontend/ast.ts"
 import Environment from "./environment.ts";
 
 function eval_program(program: Program, env: Environment): RuntimeVal {
-    let lastEvaluated: RuntimeVal = { type: "null", value: "null"} as NullVal;
+    let lastEvaluated: RuntimeVal = MK_NULL();
 
     for (const statement of program.body) {
         lastEvaluated = evaluate(statement, env);
@@ -39,7 +39,7 @@ function eval_binary_expr (binop: BinaryExpr, env: Environment): RuntimeVal {
         return eval_numeric_binary_expr(lhs as NumberVal, rhs as NumberVal, binop.operator);
     }
 
-    return { type: "null", value: "null" } as NullVal;
+    return MK_NULL();
 }
 
 export function eval_identifier (ident: Identifier, env: Environment): RuntimeVal {
@@ -56,12 +56,6 @@ export function evaluate (astNode: Stmt, env: Environment): RuntimeVal {
                 value: (astNode as NumericLiteral).value,
                 type: "number",
         } as NumberVal;
-
-        case "NullLiteral":
-            return {
-                value: "null",
-                type: "null"
-            } as NullVal;
         
         case "Identifier":
             return eval_identifier(astNode as Identifier, env);
