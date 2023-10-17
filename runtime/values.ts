@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-inferrable-types
 export type ValueTypes = "null" | "number" | "boolean";
 
 export interface RuntimeVal {
