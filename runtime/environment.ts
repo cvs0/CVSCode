@@ -30,6 +30,12 @@ export default class Environment {
         return value;
     }
 
+    public lookupVar (varname: string): RuntimeVal {
+        const env = this.resolve(varname);
+
+        return env.variables.get(varname) as RuntimeVal;
+    }
+
     public resolve (varname: string): Environment {
         if (this.variables.has(varname)) {
             return this;
