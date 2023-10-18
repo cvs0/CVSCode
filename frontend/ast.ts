@@ -2,7 +2,7 @@
 export type NodeType = 
     // STATEMENTS
     | "Program"
-    | "VariableDeclaration"
+    | "VarDeclaration"
 
     // EXPRESSIONS
     | "NumericLiteral"
@@ -19,7 +19,7 @@ export interface Program extends Stmt {
 }
 
 export interface VarDeclaration extends Stmt {
-    kind: "VariableDeclaration",
+    kind: "VarDeclaration",
     constant: boolean,
     identifier: string,
     value?: Expr;

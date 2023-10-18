@@ -6,6 +6,7 @@ import {
     BinaryExpr,
     NumericLiteral,
     Identifier,
+    VarDeclaration,
 } from "./ast.ts";
 
 import {
@@ -60,7 +61,55 @@ export default class Parser {
 
     private parse_stmt (): Stmt {
         // skip to parse_expr
-        return this.parse_expr();
+        switch (this.at().type) {
+            case TokenType.Let:
+
+            case TokenType.Const:
+                return this.parse_var_declaration();
+            default:
+                return this.parse_expr();
+        }
+    }
+
+    // LET IDENT;
+    // ( CONST / LET ) identifier = expr;
+    parse_var_declaration(): Stmt {
+        const isConstant = this.eat().type == TokenType.Const;
+        const identifier = this.expect(
+            TokenType.Identifier,
+            "Expected identifier name following let | const keywords.",
+        ).value;
+        
+        if(this.at().type == TokenType.Semicolon) {
+            this.eat(); // expect semicolon
+            if(isConstant) {
+                throw "Must assign value to a constant expression. No value provided.";
+            }
+
+            return {
+                kind: "VarDeclaration",
+                identifier,
+                constant: false,
+            } as VarDeclaration;
+        }
+
+        this.expect(
+            TokenType.Equals,
+            "Expected 'equals token following identifier in var declaration."
+        );
+
+        const declaration = {
+            kind: "VarDeclaration",
+            value: this.parse_expr(),
+            constant: isConstant,
+        } as VarDeclaration;
+
+        this.expect(
+            TokenType.Semicolon,
+            "Variable declaration statement must end with a semicolon."
+        );
+
+        return declaration;
     }
 
     private parse_expr (): Expr {

@@ -11,6 +11,7 @@ export enum TokenType {
     // Grouping * Operators
     BinaryOperator,
     Equals,
+    Semicolon,
     OpenParen,
     CloseParen,
     EOF, // Signified the end of the file
@@ -59,6 +60,8 @@ export function tokenize (sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.BinaryOperator));
         } else if (src[0] == '=') {
             tokens.push(token(src.shift(), TokenType.Equals));
+        } else if (src[0] == ';') {
+            tokens.push(token(src.shift(), TokenType.Semicolon));
         } else {
             // Handles multicharacter tokens
 
