@@ -6,20 +6,26 @@ import { MK_NULL, NativeFnValue, NumberVal, ObjectVal, RuntimeVal } from "../val
 export function eval_numeric_binary_expr (lhs: NumberVal, rhs: NumberVal, operator: string): NumberVal {
     let result: number;
 
-    if(operator == "+") {
+    if (operator == "+") {
         result = lhs.value + rhs.value;
-    } else if (operator == "-") {
+    }
+    else if (operator == "-") {
         result = lhs.value - rhs.value;
-    } else if (operator == "*") {
+    }
+    else if (operator == "*") {
         result = lhs.value * rhs.value;
-    } else if (operator == "/") {
+    }
+    else if (operator == "/") {
         // TODO: division by zero checks
         result = lhs.value / rhs.value;
     } else {
         result = lhs.value % rhs.value;
     }
 
-    return { value: result, type: "number" }
+    return {
+        value: result,
+        type: "number"
+    };
 }
 
 export function eval_binary_expr (binop: BinaryExpr, env: Environment): RuntimeVal {
@@ -27,7 +33,11 @@ export function eval_binary_expr (binop: BinaryExpr, env: Environment): RuntimeV
     const rhs = evaluate(binop.right, env);
 
     if (lhs.type == "number" && rhs.type == "number") {
-        return eval_numeric_binary_expr(lhs as NumberVal, rhs as NumberVal, binop.operator);
+        return eval_numeric_binary_expr(
+            lhs as NumberVal,
+            rhs as NumberVal,
+            binop.operator
+        );
     }
 
     return MK_NULL();
@@ -48,6 +58,7 @@ export function eval_assignment(
     }
   
     const varname = (node.assigne as Identifier).symbol;
+
     return env.assignVar(varname, evaluate(node.value, env));
 }
 
@@ -60,8 +71,8 @@ export function eval_object_expr(
     for (const { key, value } of obj.properties) {
         
         const runtimeVal = (value == undefined)
-        ? env.lookupVar(key)
-        : evaluate(value, env);
+            ? env.lookupVar(key)
+            : evaluate(value, env);
 
         object.properties.set(key, runtimeVal);
     }

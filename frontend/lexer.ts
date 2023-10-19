@@ -63,27 +63,38 @@ export function tokenize (sourceCode: string): Token[] {
     while (src.length > 0) {
         if(src[0] == '(') {
             tokens.push(token(src.shift(), TokenType.OpenParen));
-        } else if (src[0] == ")") {
+        }
+        else if (src[0] == ")") {
             tokens.push(token(src.shift(), TokenType.CloseParen));
-        } else if (src[0] == "{") {
+        }
+        else if (src[0] == "{") {
             tokens.push(token(src.shift(), TokenType.OpenBrace));
-        } else if (src[0] == "}") {
+        }
+        else if (src[0] == "}") {
             tokens.push(token(src.shift(), TokenType.CloseBrace));
-        } else if (src[0] == "[") {
+        }
+        else if (src[0] == "[") {
             tokens.push(token(src.shift(), TokenType.OpenBracket));
-        } else if (src[0] == "]") {
+        }
+        else if (src[0] == "]") {
             tokens.push(token(src.shift(), TokenType.CloseBracket));
-        } else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%") {
+        }
+        else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%") {
             tokens.push(token(src.shift(), TokenType.BinaryOperator));
-        } else if (src[0] == '=') {
+        }
+        else if (src[0] == '=') {
             tokens.push(token(src.shift(), TokenType.Equals));
-        } else if (src[0] == ';') {
+        }
+        else if (src[0] == ';') {
             tokens.push(token(src.shift(), TokenType.Semicolon));
-        } else if (src[0] == ':') {
+        }
+        else if (src[0] == ':') {
             tokens.push(token(src.shift(), TokenType.Colon));
-        } else if (src[0] == ',') {
+        }
+        else if (src[0] == ',') {
             tokens.push(token(src.shift(), TokenType.Comma));
-        } else if (src[0] == '.') {
+        }
+        else if (src[0] == '.') {
             tokens.push(token(src.shift(), TokenType.Dot));
         } else {
             // Handles multicharacter tokens
@@ -97,6 +108,7 @@ export function tokenize (sourceCode: string): Token[] {
                 }
 
                 tokens.push(token(num, TokenType.Number));
+
             } else if (isAlpha(src[0])) {
                 let ident = "";
 
@@ -107,25 +119,31 @@ export function tokenize (sourceCode: string): Token[] {
                 // check for reserved keywords
                 const reserved = KEYWORDS[ident];
 
-                if(typeof reserved == "number") {
+                if (typeof reserved == "number") {
                     tokens.push(token(ident, reserved));
-                } else {
+                }
+                else {
                     tokens.push(token(ident, TokenType.Identifier));
                 }
-            } else if (isSkippable(src[0])) {
+            }
+            else if (isSkippable(src[0])) {
                 src.shift(); // skip current char
             } else {
                 console.error(
 					"Unreconized character found in source: ",
 					src[0].charCodeAt(0),
-					src[0]
+					src[0],
 				);
+
 				Deno.exit(1);
             }
         }
     }
 
-    tokens.push({type: TokenType.EOF, value: "EndOfFile"});
+    tokens.push({
+        type: TokenType.EOF,
+        value: "EndOfFile"
+    });
     
     return tokens;
 }

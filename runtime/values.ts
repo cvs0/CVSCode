@@ -1,7 +1,12 @@
 import Environment from "./environment.ts";
 
 // deno-lint-ignore-file no-inferrable-types
-export type ValueTypes = "null" | "number" | "boolean" | "object" | "native-fn";
+export type ValueTypes = 
+    | "null"
+    | "number"
+    | "boolean"
+    | "object"
+    | "native-fn";
 
 export interface RuntimeVal {
     type: ValueTypes;
