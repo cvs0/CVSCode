@@ -6,13 +6,14 @@ export type NodeType =
 
     // EXPRESSIONS
     | "AssignmentExpr"
-
+    | "MemberExpr"
+    | "CallExpr"
+    | "BinaryExpr"
     // LITERALS
     | "Property"
     | "ObjectLiteral"
     | "NumericLiteral"
-    | "Identifier"
-    | "BinaryExpr";
+    | "Identifier";
 
 export interface Stmt {
     kind: NodeType;
