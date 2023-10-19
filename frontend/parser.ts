@@ -188,6 +188,7 @@ export default class Parser {
         while (this.at().value == "+" || this.at().value == "-") {
             const operator = this.eat().value;
             const right = this.parse_multiplicative_expr();
+            
             left = {
                 kind: "BinaryExpr",
                 left,
@@ -205,6 +206,7 @@ export default class Parser {
         while (this.at().value == "/" || this.at().value == "*" || this.at().value == "%") {
             const operator = this.eat().value;
             const right = this.parse_call_member_expr();
+
             left = {
                 kind: "BinaryExpr",
                 left,
@@ -284,6 +286,7 @@ export default class Parser {
             } else { // allows obj[computedValue]
                 computed = true;
                 property = this.parse_expr();
+
                 this.expect(TokenType.CloseBracket, "Missing closing bracket in computed value.");
             }
             object = {
@@ -324,8 +327,11 @@ export default class Parser {
 
             case TokenType.OpenParen: {
                 this.eat(); // eat the opening param
+
                 const value = this.parse_expr();
+
                 this.expect(TokenType.CloseParen, "Unexpected token found inside parenthesised experession. Expected closing parenthesis."); // closing param
+
                 return value
             }
 

@@ -1,4 +1,4 @@
-import { MK_BOOL, MK_NATIVE_FN, MK_NULL, MK_NUMBER, RuntimeVal } from "./values.ts";
+import { MK_BOOL, MK_NATIVE_FN, MK_NULL, MK_NUMBER, RuntimeVal, ValueTypes} from "./values.ts";
 
 export function createGlobalEnv() {
     const env = new Environment();
@@ -18,6 +18,14 @@ export function createGlobalEnv() {
 
     env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
 
+    function logFunction(args: RuntimeVal[], env: Environment) {
+        const message = args.map(arg => arg.toString()).join(" ");
+        console.log(message);
+        return MK_NULL();
+    }
+    
+    env.declareVar("log", MK_NATIVE_FN(logFunction), true);    
+    
     return env;
 }
 

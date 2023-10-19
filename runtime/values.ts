@@ -44,7 +44,7 @@ export interface ObjectVal extends RuntimeVal {
     properties: Map<string, RuntimeVal>;
 }
 
-export type FunctionCall = (args: RuntimeVal[], env: Environment) => RuntimeVal;
+export type FunctionCall = (args: RuntimeVal[], env: Environment) => RuntimeVal | Promise<RuntimeVal>;
 
 export interface NativeFnValue extends RuntimeVal {
     type: "native-fn";
