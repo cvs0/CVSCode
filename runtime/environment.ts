@@ -17,6 +17,7 @@ export function createGlobalEnv() {
     }
 
     env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
+
     return env;
 }
 
