@@ -2,6 +2,7 @@ import { MK_BOOL, MK_NATIVE_FN, MK_NULL, MK_NUMBER, RuntimeVal, ValueTypes} from
 
 export function createGlobalEnv() {
     const env = new Environment();
+
     env.declareVar("true", MK_BOOL(true), true);
     env.declareVar("false", MK_BOOL(false), true);
     env.declareVar("null", MK_NULL(), true);
@@ -25,6 +26,12 @@ export function createGlobalEnv() {
     }
     
     env.declareVar("log", MK_NATIVE_FN(logFunction), true);    
+
+    function rndFunction(args: RuntimeVal[], env: Environment) {
+        return MK_NUMBER(Math.random());
+    }
+
+    env.declareVar("random", MK_NATIVE_FN(rndFunction), true);
     
     return env;
 }
