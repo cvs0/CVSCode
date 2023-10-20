@@ -1,6 +1,6 @@
 import Environment from "./environment.ts";
 
-// deno-lint-ignore-file no-inferrable-types
+// deno-lint-ignore-file no-inferrable-types no-inferrable-types no-inferrable-types
 export type ValueTypes = 
     | "null"
     | "number"

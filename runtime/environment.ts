@@ -1,4 +1,4 @@
-import { MK_BOOL, MK_NATIVE_FN, MK_NULL, MK_NUMBER, RuntimeVal, ValueTypes} from "./values.ts";
+import { MK_BOOL, MK_NATIVE_FN, MK_NULL, MK_NUMBER, RuntimeVal} from "./values.ts";
 
 export function createGlobalEnv() {
     const env = new Environment();
@@ -8,18 +8,25 @@ export function createGlobalEnv() {
     env.declareVar("null", MK_NULL(), true);
 
     // define native built-in functions
-    env.declareVar("print", MK_NATIVE_FN((args, scope) => {
+    env.declareVar("print", MK_NATIVE_FN((args, _scope) => {
         console.log(...args);
         return MK_NULL();
     }), true);
 
-    function timeFunction (args: RuntimeVal[], env: Environment) {
+    env.declareVar("println", MK_NATIVE_FN((args, _scope) => {
+        console.log(...args);
+        return MK_NULL();
+    }), true);
+
+
+
+    function timeFunction (_args: RuntimeVal[], _env: Environment) {
         return MK_NUMBER(Date.now());
     }
 
     env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
 
-    function logFunction(args: RuntimeVal[], env: Environment) {
+    function logFunction(args: RuntimeVal[], _env: Environment) {
         const message = args.map(arg => arg.toString()).join(" ");
         console.log(message);
         return MK_NULL();
@@ -27,7 +34,7 @@ export function createGlobalEnv() {
     
     env.declareVar("log", MK_NATIVE_FN(logFunction), true);    
 
-    function rndFunction(args: RuntimeVal[], env: Environment) {
+    function rndFunction(_args: RuntimeVal[], _env: Environment) {
         return MK_NUMBER(Math.random());
     }
 
