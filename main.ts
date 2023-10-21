@@ -66,7 +66,10 @@ async function repl() {
     // Produce AST From source code
     const program = parser.produceAST(input);
 
+    // evaluate the program
     const result = evaluate(program, env);
+
+    // log the evaluated result
     console.log(result);
   }
 }
