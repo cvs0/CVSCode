@@ -12,6 +12,7 @@ import {
     ObjectLiteral,
     CallExpr,
     MemberExpr,
+    FunctionDeclaration,
 } from "./ast.ts";
 
 import {
@@ -71,9 +72,17 @@ export default class Parser {
 
             case TokenType.Const:
                 return this.parse_var_declaration();
+            
+            case TokenType.Fn:
+                return this.parse_fn_declaration();
+
             default:
                 return this.parse_expr();
         }
+    }
+
+    parse_fn_declaration(): Stmt {
+      this.eat();
     }
 
     // LET IDENT;
