@@ -82,8 +82,50 @@ export default class Parser {
     }
 
     parse_fn_declaration(): Stmt {
-      this.eat();
-    }
+		this.eat(); // eat fn keyword
+		const name = this.expect(
+			TokenType.Identifier,
+			"Expected function name following fn keyword"
+		).value;
+
+		const args = this.parse_args();
+		const params: string[] = [];
+		for (const arg of args) {
+			if (arg.kind !== "Identifier") {
+				console.log(arg);
+				throw "Inside function declaration expected parameters to be of type string.";
+			}
+
+			params.push((arg as Identifier).symbol);
+		}
+
+		this.expect(
+			TokenType.OpenBrace,
+			"Expected function body following declaration"
+		);
+		const body: Stmt[] = [];
+
+		while (
+			this.at().type !== TokenType.EOF &&
+			this.at().type !== TokenType.CloseBrace
+		) {
+			body.push(this.parse_stmt());
+		}
+
+		this.expect(
+			TokenType.CloseBrace,
+			"Closing brace expected inside function declaration"
+		);
+
+		const fn = {
+			body,
+			name,
+			parameters: params,
+			kind: "FunctionDeclaration",
+		} as FunctionDeclaration;
+
+		return fn;
+	}
 
     // LET IDENT;
     // ( CONST / LET ) identifier = expr;

@@ -17,7 +17,7 @@ async function run(filename: string) {
     const program = parser.produceAST(input);
 
     const result = evaluate(program, env);
-    console.log(result);
+    // console.log(result);
   } catch (error) {
     console.error(`Error reading or evaluating file: ${error.message}`);
   }

@@ -1,3 +1,4 @@
+import { Stmt } from "../frontend/ast.ts";
 import Environment from "./environment.ts";
 
 // deno-lint-ignore-file no-inferrable-types no-inferrable-types no-inferrable-types
@@ -6,7 +7,8 @@ export type ValueTypes =
     | "number"
     | "boolean"
     | "object"
-    | "native-fn";
+    | "native-fn"
+    | "function";
 
 export interface RuntimeVal {
     type: ValueTypes;
@@ -44,7 +46,7 @@ export interface ObjectVal extends RuntimeVal {
     properties: Map<string, RuntimeVal>;
 }
 
-export type FunctionCall = (args: RuntimeVal[], env: Environment) => RuntimeVal | Promise<RuntimeVal>;
+export type FunctionCall = (args: RuntimeVal[], env: Environment) => RuntimeVal;
 
 export interface NativeFnValue extends RuntimeVal {
     type: "native-fn";
@@ -53,4 +55,12 @@ export interface NativeFnValue extends RuntimeVal {
 
 export function MK_NATIVE_FN (call: FunctionCall) {
     return { type: "native-fn", call} as NativeFnValue;
+}
+
+export interface FunctionValue extends RuntimeVal {
+    type: "function";
+    name: string,
+    parameters: string[],
+    declarationEnv: Environment,
+    body: Stmt[],
 }

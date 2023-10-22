@@ -37,7 +37,7 @@ export interface FunctionDeclaration extends Stmt {
     kind: "FunctionDeclaration";
     parameters: string[];
     name: string;
-    body: Stmt;
+    body: Stmt[];
 }
 
 export interface Expr extends Stmt {}
