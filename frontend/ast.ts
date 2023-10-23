@@ -4,6 +4,7 @@ export type NodeType =
     | "Program"
     | "VarDeclaration"
     | "FunctionDeclaration"
+    | "IfStmt"
 
     // EXPRESSIONS
     | "AssignmentExpr"
@@ -31,6 +32,12 @@ export interface VarDeclaration extends Stmt {
     constant: boolean,
     identifier: string,
     value?: Expr;
+}
+
+export interface IfStmt extends Stmt {
+    condition: Expr;
+    consequence: Stmt;
+    alternate?: Stmt;
 }
 
 export interface FunctionDeclaration extends Stmt {

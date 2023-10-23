@@ -8,6 +8,8 @@ export enum TokenType {
     Let,
     Const,
     Fn, // fn
+    If,
+    Else,
 
     // Grouping * Operators
     BinaryOperator,
@@ -29,6 +31,8 @@ const KEYWORDS: Record<string, TokenType> = {
     let: TokenType.Let,
     const: TokenType.Const,
     fn: TokenType.Fn,
+    if: TokenType.If,
+    else: TokenType.Else,
 }
 
 export interface Token {
