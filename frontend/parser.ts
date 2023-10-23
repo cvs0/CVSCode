@@ -69,7 +69,8 @@ export default class Parser {
         // skip to parse_expr
         switch (this.at().type) {
             case TokenType.Let:
-
+                return this.parse_var_declaration();
+                
             case TokenType.Const:
                 return this.parse_var_declaration();
             
