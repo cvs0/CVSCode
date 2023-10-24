@@ -1,4 +1,4 @@
-let x = 10;
+let x = 25;
 
 if(x == 25) {
     print(x)

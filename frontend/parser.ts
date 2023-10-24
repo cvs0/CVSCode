@@ -300,23 +300,28 @@ export default class Parser {
         return left;
     }
 
-    private parse_comparison_expr (): Expr {
+    private parse_comparison_expr(): Expr {
         let left = this.parse_additive_expr();
-
-        while (this.at().value == "==") {
-            const operator = this.eat().value;
-            const right = this.parse_additive_expr();
-            
-            left = {
-                kind: "BinaryExpr",
-                left,
-                right,
-                operator,
-            } as BinaryExpr;
+    
+        if (this.at().value === "==") {
+            while (this.at().value === "==") {
+                const operator = this.eat().value;
+                const right = this.parse_additive_expr();
+    
+                left = {
+                    kind: "BinaryExpr",
+                    left,
+                    right,
+                    operator,
+                } as BinaryExpr;
+            }
         }
-
+    
         return left;
     }
+    
+    
+    
 
     private parse_multiplicative_expr (): Expr {
         let left = this.parse_call_member_expr();
