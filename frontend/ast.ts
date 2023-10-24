@@ -5,6 +5,7 @@ export type NodeType =
     | "VarDeclaration"
     | "FunctionDeclaration"
     | "IfStmt"
+    | "BlockStmt"
 
     // EXPRESSIONS
     | "AssignmentExpr"
@@ -38,6 +39,11 @@ export interface IfStmt extends Stmt {
     condition: Expr;
     consequence: Stmt;
     alternate?: Stmt;
+}
+
+export interface BlockStmt extends Stmt {
+    kind: "BlockStmt";
+    body: Stmt[];
 }
 
 export interface FunctionDeclaration extends Stmt {

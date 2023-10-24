@@ -13,6 +13,8 @@ import {
     CallExpr,
     MemberExpr,
     FunctionDeclaration,
+    IfStmt,
+    BlockStmt,
 } from "./ast.ts";
 
 import {
@@ -51,6 +53,7 @@ export default class Parser {
     public produceAST(sourceCode: string): Program {
 
         this.tokens = tokenize(sourceCode);
+        console.log(this.tokens);
 
         const program: Program = {
             kind: "Program",
@@ -77,9 +80,54 @@ export default class Parser {
             case TokenType.Fn:
                 return this.parse_fn_declaration();
 
+            case TokenType.If:
+                return this.parse_if_statement();
+
+            case TokenType.OpenBrace:
+                return this.parse_block();
+            
             default:
                 return this.parse_expr();
         }
+    }
+    
+    parse_block(): Stmt {
+      this.expect(TokenType.OpenBrace, "Expected opening brace for block.");
+      const body = new Array<Stmt>();
+
+      while(this.at().type != TokenType.CloseBrace && this.not_eof()) {
+        body.push(this.parse_stmt());
+      }
+
+      this.expect(TokenType.CloseBrace, "Expected closing brace for block.");
+
+      return {
+        kind: "BlockStmt",
+        body,
+      } as BlockStmt;
+    }
+
+    parse_if_statement(): Stmt {
+        this.eat();
+        this.expect(TokenType.OpenParen, "Expected opening parenthesis after if statement.");
+
+        const condition = this.parse_expr();
+        let alternate: Stmt | undefined;
+        this.expect(TokenType.CloseParen, "Expected closing parenthesis after if statement.");
+
+        const consequence = this.parse_stmt();
+
+        if(this.at().type == TokenType.Else) {
+            this.eat();
+            alternate = this.parse_stmt();
+        }
+        
+        return {
+            kind: "IfStmt",
+            condition,
+            alternate,
+            consequence,
+        } as IfStmt;
     }
 
     parse_fn_declaration(): Stmt {
@@ -190,7 +238,7 @@ export default class Parser {
     private parse_object_expr(): Expr {
       // { Prompts[] }
       if(this.at().type !== TokenType.OpenBrace) {
-        return this.parse_additive_expr();
+        return this.parse_comparison_expr();
       }
 
       this.eat(); // advance past open brace.
@@ -240,6 +288,24 @@ export default class Parser {
         while (this.at().value == "+" || this.at().value == "-") {
             const operator = this.eat().value;
             const right = this.parse_multiplicative_expr();
+            
+            left = {
+                kind: "BinaryExpr",
+                left,
+                right,
+                operator,
+            } as BinaryExpr;
+        }
+
+        return left;
+    }
+
+    private parse_comparison_expr (): Expr {
+        let left = this.parse_additive_expr();
+
+        while (this.at().value == "==") {
+            const operator = this.eat().value;
+            const right = this.parse_additive_expr();
             
             left = {
                 kind: "BinaryExpr",

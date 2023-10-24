@@ -14,6 +14,7 @@ export enum TokenType {
     // Grouping * Operators
     BinaryOperator,
     Equals,
+    DoubleEquals, // ==
     Comma,
     Dot,
     Colon,
@@ -87,7 +88,11 @@ export function tokenize (sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.BinaryOperator));
         }
         else if (src[0] == '=') {
-            tokens.push(token(src.shift(), TokenType.Equals));
+            if (src[1] == '=') {
+                tokens.push(token(spliceFront(src, 2), TokenType.DoubleEquals));
+            } else {
+                tokens.push(token(src.shift(), TokenType.Equals));
+            }
         }
         else if (src[0] == ';') {
             tokens.push(token(src.shift(), TokenType.Semicolon));
@@ -150,4 +155,8 @@ export function tokenize (sourceCode: string): Token[] {
     });
     
     return tokens;
+}
+
+function spliceFront(src: string[], n: number): string {
+    return src.splice(0, n).join("");
 }

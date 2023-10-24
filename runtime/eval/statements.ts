@@ -1,4 +1,4 @@
-import { FunctionDeclaration, Program, VarDeclaration } from "../../frontend/ast.ts";
+import { BlockStmt, FunctionDeclaration, IfStmt, Program, Stmt, VarDeclaration } from "../../frontend/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
 import { FunctionValue, MK_NULL, RuntimeVal } from "../values.ts";
@@ -42,4 +42,10 @@ export function eval_function_declaration(
 	} as FunctionValue;
 
 	return env.declareVar(declaration.name, fn, true);
+}
+
+export function eval_if_stmt(stmt: IfStmt, env: Environment): RuntimeVal {
+}
+
+export function eval_block_stmt(stmt: BlockStmt, env: Environment): RuntimeVal {
 }
