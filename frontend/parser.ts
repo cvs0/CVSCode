@@ -91,8 +91,7 @@ export default class Parser {
                     kind: "StringLiteral",
                     value: this.eat().value,
                 } as StringLiteral;
-                
-                
+
 
             default:
                 return this.parse_expr();

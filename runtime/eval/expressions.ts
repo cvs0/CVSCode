@@ -9,6 +9,36 @@ export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operato
             value: lhs.value === rhs.value,
             type: "boolean"
         };
+    } else if (operator == "!=") {
+        return {
+            value: lhs.value !== rhs.value,
+            type: "boolean"
+        };
+    } else if (operator == "<") {
+        return {
+            value: lhs.value < rhs.value,
+            type: "boolean"
+        };
+    } else if (operator == "<=") {
+        return {
+            value: lhs.value <= rhs.value,
+            type: "boolean"
+        };
+    } else if (operator == ">") {
+        return {
+            value: lhs.value > rhs.value,
+            type: "boolean"
+        };
+    } else if (operator == ">=") {
+        return {
+            value: lhs.value >= rhs.value,
+            type: "boolean"
+        };
+    } else if (operator == "&&" || operator == "||") {
+        return {
+            value: operator == "&&" ? (lhs.value && rhs.value) : (lhs.value || rhs.value),
+            type: "number"
+        };
     } else {
         let result: number;
 

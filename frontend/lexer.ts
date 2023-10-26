@@ -6,20 +6,21 @@ export enum TokenType {
     String,
 
     // Keywords
-    Let,
-    Const,
+    Let, // let
+    Const, // const
     Fn, // fn
-    If,
-    Else,
+    If, // if
+    Else, // else
 
     // Grouping * Operators
-    BinaryOperator,
-    Equals,
+    BinaryOperator, // +, -, *, /, %
+    Equals, // =
     DoubleEquals, // ==
-    Comma,
-    Dot,
-    Colon,
-    Semicolon,
+    NotEquals, // !=
+    Comma, // ,
+    Dot, // .
+    Colon, // :
+    Semicolon, // ;
     OpenParen, // (
     CloseParen, // )
     OpenBrace, // {
@@ -27,6 +28,12 @@ export enum TokenType {
     OpenBracket, // [
     CloseBracket, // ]
     EOF, // Signified the end of the file
+    LessThan, // <
+    GreaterThan, // >
+    LessThanEquals, // <=
+    GreaterThanEquals, // >=
+    And, // &&
+    Or, // ||
 }
 
 const KEYWORDS: Record<string, TokenType> = {
@@ -70,24 +77,31 @@ export function tokenize (sourceCode: string): Token[] {
         if(src[0] == '(') {
             tokens.push(token(src.shift(), TokenType.OpenParen));
         }
+
         else if (src[0] == ")") {
             tokens.push(token(src.shift(), TokenType.CloseParen));
         }
+
         else if (src[0] == "{") {
             tokens.push(token(src.shift(), TokenType.OpenBrace));
         }
+
         else if (src[0] == "}") {
             tokens.push(token(src.shift(), TokenType.CloseBrace));
         }
+
         else if (src[0] == "[") {
             tokens.push(token(src.shift(), TokenType.OpenBracket));
         }
+
         else if (src[0] == "]") {
             tokens.push(token(src.shift(), TokenType.CloseBracket));
         }
+
         else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%") {
             tokens.push(token(src.shift(), TokenType.BinaryOperator));
         }
+
         else if (src[0] == '=') {
             if (src[1] == '=') {
                 tokens.push(token(spliceFront(src, 2), TokenType.DoubleEquals));
@@ -95,6 +109,41 @@ export function tokenize (sourceCode: string): Token[] {
                 tokens.push(token(src.shift(), TokenType.Equals));
             }
         }
+
+        else if (src[0] == "!") {
+            if(src[1] == "=") {
+                tokens.push(token(spliceFront(src, 2), TokenType.NotEquals));
+            }
+        }
+
+        else if (src[0] == ">") {
+            if(src[1] == "=") {
+                tokens.push(token(spliceFront(src, 2), TokenType.GreaterThanEquals));
+            } else {
+                tokens.push(token(src.shift(), TokenType.GreaterThan));
+            }
+        }
+
+        else if (src[0] == "<") {
+            if(src[1] == "=") {
+                tokens.push(token(spliceFront(src, 2), TokenType.LessThanEquals));
+            } else {
+                tokens.push(token(src.shift(), TokenType.LessThan));
+            }
+        }
+
+        else if (src[0] == "&") {
+            if(src[1] == "&") {
+                tokens.push(token(spliceFront(src, 2), TokenType.And));
+            }
+        }
+
+        else if (src[0] == "|") {
+            if(src[1] == "|") {
+                tokens.push(token(spliceFront(src, 2), TokenType.Or));
+            }
+        }
+
         else if (src[0] == '"') {
             src.shift();
             let str = "";
@@ -111,18 +160,24 @@ export function tokenize (sourceCode: string): Token[] {
                 Deno.exit(1);
             }
         }
+
         else if (src[0] == ';') {
             tokens.push(token(src.shift(), TokenType.Semicolon));
         }
+
         else if (src[0] == ':') {
             tokens.push(token(src.shift(), TokenType.Colon));
         }
+
         else if (src[0] == ',') {
             tokens.push(token(src.shift(), TokenType.Comma));
         }
+
         else if (src[0] == '.') {
             tokens.push(token(src.shift(), TokenType.Dot));
-        } else {
+        }
+        
+        else {
             // Handles multicharacter tokens
 
             // Build number token
