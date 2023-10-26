@@ -1,32 +1,37 @@
 import { AssignmentExpr, BinaryExpr, CallExpr, Identifier, ObjectLiteral } from "../../frontend/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { FunctionValue, MK_NULL, NativeFnValue, NumberVal, ObjectVal, RuntimeVal } from "../values.ts";
+import { BooleanVal, FunctionValue, MK_NULL, NativeFnValue, NumberVal, ObjectVal, RuntimeVal } from "../values.ts";
 
-export function eval_numeric_binary_expr (lhs: NumberVal, rhs: NumberVal, operator: string): NumberVal {
-    let result: number;
-
-    if (operator == "+") {
-        result = lhs.value + rhs.value;
-    }
-    else if (operator == "-") {
-        result = lhs.value - rhs.value;
-    }
-    else if (operator == "*") {
-        result = lhs.value * rhs.value;
-    }
-    else if (operator == "/") {
-        // TODO: division by zero checks
-        result = lhs.value / rhs.value;
+export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operator: string): BooleanVal | NumberVal {
+    if (operator == "==") {
+        return {
+            value: lhs.value === rhs.value,
+            type: "boolean"
+        };
     } else {
-        result = lhs.value % rhs.value;
-    }
+        let result: number;
 
-    return {
-        value: result,
-        type: "number"
-    };
+        if (operator == "+") {
+            result = lhs.value + rhs.value;
+        } else if (operator == "-") {
+            result = lhs.value - rhs.value;
+        } else if (operator == "*") {
+            result = lhs.value * rhs.value;
+        } else if (operator == "/") {
+            // TODO: division by zero checks
+            result = lhs.value / rhs.value;
+        } else {
+            result = lhs.value % rhs.value;
+        }
+
+        return {
+            value: result,
+            type: "number"
+        };
+    }
 }
+
 
 export function eval_binary_expr (binop: BinaryExpr, env: Environment): RuntimeVal {
     const lhs = evaluate(binop.left, env);
