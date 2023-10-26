@@ -3,5 +3,5 @@ let x = 2;
 if(x == 25) {
     print(x)
 } else {
-    print(10)
+    print("Fuck you")
 }

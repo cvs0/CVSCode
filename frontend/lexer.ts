@@ -3,6 +3,7 @@ export enum TokenType {
     // Literal Types
     Number,
     Identifier,
+    String,
 
     // Keywords
     Let,
@@ -92,6 +93,22 @@ export function tokenize (sourceCode: string): Token[] {
                 tokens.push(token(spliceFront(src, 2), TokenType.DoubleEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.Equals));
+            }
+        }
+        else if (src[0] == '"') {
+            src.shift();
+            let str = "";
+        
+            while (src.length > 0 && src[0] !== '"') {
+                str += src.shift();
+            }
+        
+            if (src[0] === '"') {
+                src.shift();
+                tokens.push(token(str, TokenType.String));
+            } else {
+                console.error("Unterminated string literal");
+                Deno.exit(1);
             }
         }
         else if (src[0] == ';') {

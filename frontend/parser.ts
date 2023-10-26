@@ -15,6 +15,7 @@ import {
     FunctionDeclaration,
     IfStmt,
     BlockStmt,
+    StringLiteral,
 } from "./ast.ts";
 
 import {
@@ -53,7 +54,7 @@ export default class Parser {
     public produceAST(sourceCode: string): Program {
 
         this.tokens = tokenize(sourceCode);
-        
+
         const program: Program = {
             kind: "Program",
             body: [],
@@ -85,6 +86,14 @@ export default class Parser {
             case TokenType.OpenBrace:
                 return this.parse_block();
             
+            case TokenType.String:
+                return {
+                    kind: "StringLiteral",
+                    value: this.eat().value,
+                } as StringLiteral;
+                
+                
+
             default:
                 return this.parse_expr();
         }
@@ -446,6 +455,12 @@ export default class Parser {
                     kind: "NumericLiteral",
                      value: parseFloat(this.eat().value)
                 } as NumericLiteral;
+            
+            case TokenType.String:
+                return {
+                    kind: "StringLiteral",
+                    value: this.eat().value,
+                } as StringLiteral;
 
             case TokenType.OpenParen: {
                 this.eat(); // eat the opening param
