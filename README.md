@@ -18,7 +18,7 @@ CVSCode is a simple scripting language that is built with TypeScript, made by CV
 * ~~Function calls~~
 * ~~Object member expressions~~
 * ~~Native global functions~~
-* if statements
+* ~~if statements~~
 * loops
 * comments
 
