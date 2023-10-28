@@ -1,7 +1,8 @@
 let x = 2;
+let y = "hi";
 
 if(x == 25) {
     print(x)
 } else {
-    print('X does not equal 25')
+    print('X does not equal 25 ')
 }

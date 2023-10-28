@@ -4,6 +4,7 @@ import { evaluate } from "../interpreter.ts";
 import { BooleanVal, FunctionValue, MK_NULL, NativeFnValue, NumberVal, ObjectVal, RuntimeVal } from "../values.ts";
 
 export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operator: string): BooleanVal | NumberVal {
+    let result: number;
     if (operator == "==") {
         return {
             value: lhs.value === rhs.value,
@@ -39,27 +40,48 @@ export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operato
             value: operator == "&&" ? (lhs.value && rhs.value) : (lhs.value || rhs.value),
             type: "number"
         };
-    } else {
-        let result: number;
-
-        if (operator == "+") {
-            result = lhs.value + rhs.value;
-        } else if (operator == "-") {
-            result = lhs.value - rhs.value;
-        } else if (operator == "*") {
-            result = lhs.value * rhs.value;
-        } else if (operator == "/") {
-            // TODO: division by zero checks
-            result = lhs.value / rhs.value;
-        } else {
-            result = lhs.value % rhs.value;
+    } else if (operator == "+") {
+        result = lhs.value + rhs.value;
+    } else if (operator == "-") {
+        result = lhs.value - rhs.value;
+    } else if (operator == "*") {
+        result = lhs.value * rhs.value;
+    } else if (operator == "/") {
+        if (rhs.value === 0) {
+            console.error("Division by zero");
+            Deno.exit(1);
+        }
+        
+        result = lhs.value / rhs.value;
+    } else if (operator == "%") {
+        result = lhs.value % rhs.value;
+    } else if (operator == "+=") {
+        lhs.value += rhs.value;
+        return lhs;
+    } else if (operator == "-=") {
+        lhs.value -= rhs.value;
+        return lhs;
+    } else if (operator == "*=") {
+        lhs.value *= rhs.value;
+        return lhs;
+    } else if (operator == "/=") {
+        if (rhs.value === 0) {
+            console.error("Division by zero");
+            Deno.exit(1);
         }
 
-        return {
-            value: result,
-            type: "number"
-        };
+        lhs.value /= rhs.value;
+        return lhs;
     }
+     else {
+        console.error("Unrecognized operator: " + operator);
+        Deno.exit(1);
+    }
+
+    return {
+        value: result,
+        type: "number"
+    };
 }
 
 
