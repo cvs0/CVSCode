@@ -44,7 +44,7 @@ async function repl() {
 
     if(input == "clear") {
       console.clear();
-      console.log("\nRepl v0.3");
+      console.log("\nRepl " + version);
 
       continue;
     }

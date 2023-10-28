@@ -143,7 +143,7 @@ export function tokenize (sourceCode: string): Token[] {
                 tokens.push(token(spliceFront(src, 2), TokenType.Or));
             }
         }
-
+        
         else if (src[0] == '"') {
             src.shift();
             let str = "";
@@ -153,6 +153,23 @@ export function tokenize (sourceCode: string): Token[] {
             }
         
             if (src[0] === '"') {
+                src.shift();
+                tokens.push(token(str, TokenType.String));
+            } else {
+                console.error("Unterminated string literal");
+                Deno.exit(1);
+            }
+        }
+
+        else if (src[0] == "'") {
+            src.shift();
+            let str = "";
+        
+            while (src.length > 0 && src[0] !== "'") {
+                str += src.shift();
+            }
+        
+            if (src[0] === "'") {
                 src.shift();
                 tokens.push(token(str, TokenType.String));
             } else {
