@@ -2,6 +2,8 @@ import Parser from "./frontend/parser.ts";
 import { createGlobalEnv } from "./runtime/environment.ts";
 import { evaluate } from "./runtime/interpreter.ts";
 
+const version = "v0.3";
+
 async function run(filename: string) {
   const parser = new Parser();
   const env = createGlobalEnv();
@@ -24,13 +26,20 @@ async function run(filename: string) {
 async function repl() {
   const parser = new Parser();
   const env = createGlobalEnv();
-  console.log("\nRepl v0.3");
+  console.log("\nRepl " + version);
 
   while (true) {
     const input = prompt("> ");
 
     if (!input || input.includes("exit")) {
       Deno.exit(1);
+    }
+
+    if(input == "version") {
+      console.log("CVSCode Repl " + version);
+      console.log("Made by cvs0.");
+
+      continue;
     }
 
     if(input == "clear") {
