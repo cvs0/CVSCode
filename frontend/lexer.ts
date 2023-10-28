@@ -34,6 +34,10 @@ export enum TokenType {
     GreaterThanEquals, // >=
     And, // &&
     Or, // ||
+    PlusEquals,   // +=
+    MinusEquals,  // -=
+    TimesEquals,  // *=
+    DivideEquals, // /=
 }
 
 const KEYWORDS: Record<string, TokenType> = {
@@ -98,9 +102,42 @@ export function tokenize (sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.CloseBracket));
         }
 
-        else if (src[0] == "+" || src[0] == "-" || src[0] == "*" || src[0] == "/" || src[0] == "%") {
+        else if (src[0] == "+") {
+            if(src[1] == '=') {
+                tokens.push(token(src.shift(), TokenType.PlusEquals));
+            } else {
+                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+            }
+        }
+
+        else if (src[0] == "-") {
+            if(src[1] == '=') {
+                tokens.push(token(src.shift(), TokenType.MinusEquals));
+            } else {
+                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+            }
+        }
+        
+        else if (src[0] == "*") {
+            if(src[1] == '=') {
+                tokens.push(token(src.shift(), TokenType.TimesEquals));
+            } else {
+                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+            }
+        }
+        
+        else if (src[0] == "/") {
+            if(src[1] == '=') {
+                tokens.push(token(src.shift(), TokenType.DivideEquals));
+            } else {
+                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+            }
+        }
+        
+        else if (src[0] == "%") {
             tokens.push(token(src.shift(), TokenType.BinaryOperator));
         }
+        
 
         else if (src[0] == '=') {
             if (src[1] == '=') {
