@@ -51,15 +51,22 @@ async function repl() {
 
     if (input.startsWith("run")) {
 
-      console.log("Checking filename.");
+      if(Deno.args.includes("--developer")) {
+        console.log("Checking filename.");
+      }
+      
       const fileNameMatch = input.match(/run\s+(\S+)/);
       if (fileNameMatch) {
 
         const fileName = fileNameMatch[1];
 
-        console.log("Running file: " + fileName);
-        await run(fileName);
-        console.log("Ran file: " + fileName);
+        if(Deno.args.includes("--developer")) {
+          console.log("Running file: " + fileName);
+          await run(fileName);
+          console.log("Ran file: " + fileName);
+        } else {
+          await run(fileName);
+        }
 
         continue;
       } else {
