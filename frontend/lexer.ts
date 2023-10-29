@@ -1,3 +1,4 @@
+// deno-lint-ignore-file no-inferrable-types no-unused-vars prefer-const
 
 export enum TokenType {
     // Literal Types
@@ -57,24 +58,37 @@ export interface Token {
     type: TokenType,
 }
 
-function token (value = "", type: TokenType): Token {
+function token(value: string = "", type: TokenType): Token {
+    if (typeof value !== 'string' || !Object.values(TokenType).includes(type)) {
+        throw new Error('Invalid arguments for token function');
+    }
     return { value, type };
 }
 
-function isAlpha (src: string) {
-    return src.toUpperCase() != src.toLowerCase();
+function isAlpha(char: string): boolean {
+    if (typeof char !== 'string' || char.length !== 1) {
+        throw new Error('Invalid argument for isAlpha function');
+    }
+    const upperCaseChar = char.toUpperCase();
+    return upperCaseChar !== char.toLowerCase();
 }
 
-function isSkippable (str: string) {
-    return str == ' ' || str == '\n' || str == '\t' || str == '\r';
+function isSkippable(char: string): boolean {
+    if (typeof char !== 'string' || char.length !== 1) {
+        throw new Error('Invalid argument for isSkippable function');
+    }
+    return char === ' ' || char === '\n' || char === '\t' || char === '\r';
 }
 
-function isInt (str: string) {
-    const c = str.charCodeAt(0);
+function isInt(char: string): boolean {
+    if (typeof char !== 'string' || char.length !== 1) {
+        throw new Error('Invalid argument for isInt function');
+    }
+    const charCode = char.charCodeAt(0);
     const bounds = ['0'.charCodeAt(0), '9'.charCodeAt(0)];
-
-    return (c >= bounds[0] && c <= bounds[1]);
+    return charCode >= bounds[0] && charCode <= bounds[1];
 }
+
 
 export function tokenize (sourceCode: string): Token[] {
     const tokens = new Array<Token>();
@@ -304,5 +318,13 @@ export function tokenize (sourceCode: string): Token[] {
 }
 
 function spliceFront(src: string[], n: number): string {
+    if (!Array.isArray(src) || typeof n !== 'number' || n < 0) {
+        throw new Error('Invalid arguments for spliceFront function');
+    }
+
+    if (n > src.length) {
+        throw new Error('Value of n exceeds the length of the source array');
+    }
+
     return src.splice(0, n).join("");
 }
