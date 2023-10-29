@@ -49,14 +49,17 @@ async function repl() {
       continue;
     }
 
-    if (input.includes("run")) {
+    if (input.startsWith("run")) {
 
+      console.log("Checking filename.");
       const fileNameMatch = input.match(/run\s+(\S+)/);
       if (fileNameMatch) {
 
         const fileName = fileNameMatch[1];
 
+        console.log("Running file: " + fileName);
         await run(fileName);
+        console.log("Ran file: " + fileName);
 
         continue;
       } else {
