@@ -58,7 +58,7 @@ export interface Token {
 }
 
 function token (value = "", type: TokenType): Token {
-    return { value, type};
+    return { value, type };
 }
 
 function isAlpha (src: string) {
@@ -79,6 +79,8 @@ function isInt (str: string) {
 export function tokenize (sourceCode: string): Token[] {
     const tokens = new Array<Token>();
     const src = sourceCode.split("")
+    const lines = sourceCode.split("\n");
+    let line = 1;
 
     // Build each token until end of the file
     while (src.length > 0) {

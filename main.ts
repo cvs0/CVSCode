@@ -62,7 +62,9 @@ async function repl() {
 
         if(Deno.args.includes("--developer")) {
           console.log("Running file: " + fileName);
+
           await run(fileName);
+
           console.log("Ran file: " + fileName);
         } else {
           await run(fileName);
@@ -77,7 +79,6 @@ async function repl() {
     }
 
     const program = parser.produceAST(input);
-
     const result = evaluate(program, env);
 
     console.log(result);
