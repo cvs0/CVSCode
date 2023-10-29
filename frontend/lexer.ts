@@ -38,6 +38,10 @@ export enum TokenType {
     MinusEquals,  // -=
     TimesEquals,  // *=
     DivideEquals, // /=
+    Increment, // ++
+    Decrement, // --
+    Not, // !
+    XorEqual, // ^=
 }
 
 const KEYWORDS: Record<string, TokenType> = {
@@ -102,8 +106,18 @@ export function tokenize (sourceCode: string): Token[] {
             tokens.push(token(src.shift(), TokenType.CloseBracket));
         }
 
+        else if (src[0] == "^") {
+            if (src[1] == "=") {
+                tokens.push(token(spliceFront(src, 2), TokenType.XorEqual));
+            } else {
+                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+            }
+        }
+
         else if (src[0] == "+") {
-            if(src[1] == '=') {
+            if (src[1] == "+") {
+                tokens.push(token(spliceFront(src, 2), TokenType.Increment));
+            } else if(src[1] == '=') {
                 tokens.push(token(spliceFront(src, 2), TokenType.PlusEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
@@ -111,7 +125,9 @@ export function tokenize (sourceCode: string): Token[] {
         }
 
         else if (src[0] == "-") {
-            if(src[1] == '=') {
+            if (src[1] == "-") {
+                tokens.push(token(spliceFront(src, 2), TokenType.Decrement));
+            } if(src[1] == '=') {
                 tokens.push(token(spliceFront(src, 2), TokenType.MinusEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
@@ -150,6 +166,8 @@ export function tokenize (sourceCode: string): Token[] {
         else if (src[0] == "!") {
             if(src[1] == "=") {
                 tokens.push(token(spliceFront(src, 2), TokenType.NotEquals));
+            } else {
+                tokens.push(token(src.shift(), TokenType.Not));
             }
         }
 
