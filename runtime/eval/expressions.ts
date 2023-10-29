@@ -55,25 +55,7 @@ export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operato
         result = lhs.value / rhs.value;
     } else if (operator == "%") {
         result = lhs.value % rhs.value;
-    } else if (operator == "+=") {
-        lhs.value += rhs.value;
-        return lhs;
-    } else if (operator == "-=") {
-        lhs.value -= rhs.value;
-        return lhs;
-    } else if (operator == "*=") {
-        lhs.value *= rhs.value;
-        return lhs;
-    } else if (operator == "/=") {
-        if (rhs.value === 0) {
-            console.error("Division by zero");
-            Deno.exit(1);
-        }
-
-        lhs.value /= rhs.value;
-        return lhs;
-    }
-     else {
+    } else {
         console.error("Unrecognized operator: " + operator);
         Deno.exit(1);
     }

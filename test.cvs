@@ -1,5 +1,4 @@
 let x = 2;
-let y = "hi";
 
 if(x == 25) {
     print(x)
