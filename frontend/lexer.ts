@@ -104,7 +104,7 @@ export function tokenize (sourceCode: string): Token[] {
 
         else if (src[0] == "+") {
             if(src[1] == '=') {
-                tokens.push(token(src.shift(), TokenType.PlusEquals));
+                tokens.push(token(spliceFront(src, 2), TokenType.PlusEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
             }
@@ -112,7 +112,7 @@ export function tokenize (sourceCode: string): Token[] {
 
         else if (src[0] == "-") {
             if(src[1] == '=') {
-                tokens.push(token(src.shift(), TokenType.MinusEquals));
+                tokens.push(token(spliceFront(src, 2), TokenType.MinusEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
             }
@@ -120,7 +120,7 @@ export function tokenize (sourceCode: string): Token[] {
         
         else if (src[0] == "*") {
             if(src[1] == '=') {
-                tokens.push(token(src.shift(), TokenType.TimesEquals));
+                tokens.push(token(spliceFront(src, 2), TokenType.TimesEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
             }
@@ -128,7 +128,7 @@ export function tokenize (sourceCode: string): Token[] {
         
         else if (src[0] == "/") {
             if(src[1] == '=') {
-                tokens.push(token(src.shift(), TokenType.DivideEquals));
+                tokens.push(token(spliceFront(src, 2), TokenType.DivideEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
             }
