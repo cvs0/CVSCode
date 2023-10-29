@@ -6,42 +6,42 @@ export enum TokenType {
     String,
 
     // Keywords
-    Let, // let
-    Const, // const
-    Fn, // fn
-    If, // if
-    Else, // else
+    Let,                // let
+    Const,              // const
+    Fn,                 // fn
+    If,                 // if
+    Else,               // else
 
     // Grouping * Operators
-    BinaryOperator, // +, -, *, /, %
-    Equals, // =
-    DoubleEquals, // ==
-    NotEquals, // !=
-    Comma, // ,
-    Dot, // .
-    Colon, // :
-    Semicolon, // ;
-    OpenParen, // (
-    CloseParen, // )
-    OpenBrace, // {
-    CloseBrace, // }
-    OpenBracket, // [
-    CloseBracket, // ]
-    EOF, // Signified the end of the file
-    LessThan, // <
-    GreaterThan, // >
-    LessThanEquals, // <=
-    GreaterThanEquals, // >=
-    And, // &&
-    Or, // ||
-    PlusEquals,   // +=
-    MinusEquals,  // -=
-    TimesEquals,  // *=
-    DivideEquals, // /=
-    Increment, // ++
-    Decrement, // --
-    Not, // !
-    XorEqual, // ^=
+    BinaryOperator,     // +, -, *, /, %, ^
+    Equals,             // =
+    DoubleEquals,       // ==
+    NotEquals,          // !=
+    Comma,              // ,
+    Dot,                // .
+    Colon,              // :
+    Semicolon,          // ;
+    OpenParen,          // (
+    CloseParen,         // )
+    OpenBrace,          // {
+    CloseBrace,         // }
+    OpenBracket,        // [
+    CloseBracket,       // ]
+    EOF,                // Signified the end of the file
+    LessThan,           // <
+    GreaterThan,        // >
+    LessThanEquals,     // <=
+    GreaterThanEquals,  // >=
+    And,                // &&
+    Or,                 // ||
+    PlusEquals,         // +=
+    MinusEquals,        // -=
+    TimesEquals,        // *=
+    DivideEquals,       // /=
+    Increment,          // ++
+    Decrement,          // --
+    Not,                // !
+    XorEqual,           // ^=
 }
 
 const KEYWORDS: Record<string, TokenType> = {
