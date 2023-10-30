@@ -52,152 +52,213 @@ export default class Parser {
     }
 
     public produceAST(sourceCode: string): Program {
-
+        // Tokenize the source code to obtain a list of tokens
         this.tokens = tokenize(sourceCode);
-
+    
+        // Create the root of the abstract syntax tree (AST)
         const program: Program = {
             kind: "Program",
             body: [],
         };
-
-        // parse until end of file
-        while(this.not_eof()) {
-            program.body.push(this.parse_stmt());
+    
+        try {
+            // Iterate through tokens and parse statements until the end of the file
+            while (this.not_eof()) {
+                // Attempt to parse a statement
+                const statement = this.parse_stmt();
+    
+                if (statement) {
+                    // If parsing was successful, add the statement to the program body
+                    program.body.push(statement);
+                } else {
+                    // If parsing failed, throw an error
+                    throw new Error("Failed to parse statement");
+                }
+            }
+        } catch (error) {
+            // Handle any errors that occurred during parsing
+            console.error(`Error parsing source code: ${error.message}`);
+            // Re-throw a custom error to propagate it further, if needed
+            throw new Error("Parsing failed", error);
         }
-
+    
+        // Return the completed AST
         return program;
     }
 
-    private parse_stmt (): Stmt {
-        // skip to parse_expr
+    private parse_stmt(): Stmt {
+        // Determine the type of statement to parse based on the current token
+        
+        // Parse a variable declaration for 'let' and 'const' keywords
         switch (this.at().type) {
             case TokenType.Let:
                 return this.parse_var_declaration();
                 
             case TokenType.Const:
                 return this.parse_var_declaration();
-            
+        
+            // Parse a function declaration for the 'fn' keyword
             case TokenType.Fn:
                 return this.parse_fn_declaration();
-
+    
+            // Parse an 'if' statement
             case TokenType.If:
                 return this.parse_if_statement();
-
+    
+            // Parse a block statement enclosed in curly braces
             case TokenType.OpenBrace:
                 return this.parse_block();
             
+            // Parse a string literal
             case TokenType.String:
                 return {
                     kind: "StringLiteral",
                     value: this.eat().value,
                 } as StringLiteral;
-
-
+    
+            // If none of the above, assume it's an expression
             default:
                 return this.parse_expr();
         }
     }
     
     parse_block(): Stmt {
-      this.expect(TokenType.OpenBrace, "Expected opening brace for block.");
-      const body = new Array<Stmt>();
-
-      while(this.at().type != TokenType.CloseBrace && this.not_eof()) {
-        body.push(this.parse_stmt());
-      }
-
-      this.expect(TokenType.CloseBrace, "Expected closing brace for block.");
-
-      return {
-        kind: "BlockStmt",
-        body,
-      } as BlockStmt;
+        // Expect an opening brace to start a block statement
+        this.expect(TokenType.OpenBrace, "Expected opening brace for block.");
+    
+        // Initialize an array to store statements within the block
+        const body = new Array<Stmt>();
+    
+        // Continue parsing statements until a closing brace is encountered or the end of the input
+        while (this.at().type !== TokenType.CloseBrace && this.not_eof()) {
+            // Parse each statement within the block
+            body.push(this.parse_stmt());
+        }
+    
+        // Expect a closing brace to end the block statement
+        this.expect(TokenType.CloseBrace, "Expected closing brace for block.");
+    
+        // Return a Block Statement containing the parsed statements
+        return {
+            kind: "BlockStmt",
+            body,
+        } as BlockStmt;
     }
 
     parse_if_statement(): Stmt {
+        // Consume the 'if' keyword
         this.eat();
+        
+        // Expect an opening parenthesis after the 'if' statement
         this.expect(TokenType.OpenParen, "Expected opening parenthesis after if statement.");
-
+    
+        // Parse the condition expression within the if statement
         const condition = this.parse_expr();
+    
+        // Initialize 'alternate' as undefined; it's optional
         let alternate: Stmt | undefined;
+    
+        // Expect a closing parenthesis after the condition expression
         this.expect(TokenType.CloseParen, "Expected closing parenthesis after if statement.");
-
+    
+        // Parse the consequence (true-branch) of the if statement
         const consequence = this.parse_stmt();
-
-        if(this.at().type == TokenType.Else) {
+    
+        // Check if there is an 'else' clause
+        if (this.at().type === TokenType.Else) {
+            // Consume the 'else' keyword
             this.eat();
+            // Parse the alternate (false-branch) of the if statement
             alternate = this.parse_stmt();
         }
         
+        // Return an If Statement node with condition, consequence, and alternate
         return {
             kind: "IfStmt",
             condition,
             alternate,
             consequence,
         } as IfStmt;
-    }
+    }    
 
     parse_fn_declaration(): Stmt {
-		this.eat(); // eat fn keyword
-		const name = this.expect(
-			TokenType.Identifier,
-			"Expected function name following fn keyword"
-		).value;
-
-		const args = this.parse_args();
-		const params: string[] = [];
-		for (const arg of args) {
-			if (arg.kind !== "Identifier") {
-				console.log(arg);
-				throw "Inside function declaration expected parameters to be of type string.";
-			}
-
-			params.push((arg as Identifier).symbol);
-		}
-
-		this.expect(
-			TokenType.OpenBrace,
-			"Expected function body following declaration"
-		);
-		const body: Stmt[] = [];
-
-		while (
-			this.at().type !== TokenType.EOF &&
-			this.at().type !== TokenType.CloseBrace
-		) {
-			body.push(this.parse_stmt());
-		}
-
-		this.expect(
-			TokenType.CloseBrace,
-			"Closing brace expected inside function declaration"
-		);
-
-		const fn = {
-			body,
-			name,
-			parameters: params,
-			kind: "FunctionDeclaration",
-		} as FunctionDeclaration;
-
-		return fn;
-	}
-
-    // LET IDENT;
-    // ( CONST / LET ) identifier = expr;
+        // Consume the 'fn' keyword
+        this.eat();
+    
+        // Expect and extract the function name
+        const name = this.expect(
+            TokenType.Identifier,
+            "Expected function name following fn keyword"
+        ).value;
+    
+        // Parse function arguments and store them in 'args'
+        const args = this.parse_args();
+        const params: string[] = [];
+    
+        // Extract argument names from 'args' and check if they are of type 'Identifier'
+        for (const arg of args) {
+            if (arg.kind !== "Identifier") {
+                // Handle an error if an argument is not of type 'Identifier'
+                console.log(arg);
+                throw "Inside function declaration, expected parameters to be of type string.";
+            }
+    
+            params.push((arg as Identifier).symbol);
+        }
+    
+        // Expect an opening brace to start the function body
+        this.expect(
+            TokenType.OpenBrace,
+            "Expected function body following declaration"
+        );
+    
+        // Initialize an array to store statements within the function body
+        const body: Stmt[] = [];
+    
+        // Continue parsing statements until the end of the file or a closing brace is encountered
+        while (
+            this.at().type !== TokenType.EOF &&
+            this.at().type !== TokenType.CloseBrace
+        ) {
+            body.push(this.parse_stmt());
+        }
+    
+        // Expect a closing brace to end the function declaration
+        this.expect(
+            TokenType.CloseBrace,
+            "Closing brace expected inside function declaration"
+        );
+    
+        // Create a Function Declaration node with the parsed information
+        const fn = {
+            body,
+            name,
+            parameters: params,
+            kind: "FunctionDeclaration",
+        } as FunctionDeclaration;
+    
+        return fn;
+    }
+    
+    // Parse a variable declaration statement.
     parse_var_declaration(): Stmt {
-        const isConstant = this.eat().type == TokenType.Const;
+        // Check if the declaration is for a constant variable (const) or a regular variable (let).
+        const isConstant = this.eat().type === TokenType.Const;
+
+        // Expect and extract the identifier name.
         const identifier = this.expect(
             TokenType.Identifier,
-            "Expected identifier name following let | const keywords.",
+            "Expected identifier name following let | const keywords."
         ).value;
-        
-        if(this.at().type == TokenType.Semicolon) {
-            this.eat(); // expect semicolon
-            if(isConstant) {
-                throw "Must assign value to a constant expression. No value provided.";
+
+        // If the statement ends with a semicolon, it's a declaration without an assignment.
+        if (this.at().type === TokenType.Semicolon) {
+            this.eat(); // Expect and consume the semicolon.
+            if (isConstant) {
+                throw "Must assign a value to a constant expression. No value provided.";
             }
 
+            // Return a Variable Declaration node with no assignment.
             return {
                 kind: "VarDeclaration",
                 identifier,
@@ -205,11 +266,13 @@ export default class Parser {
             } as VarDeclaration;
         }
 
+        // Expect an 'equals' token (=) to indicate an assignment.
         this.expect(
             TokenType.Equals,
-            "Expected 'equals token following identifier in var declaration."
+            "Expected 'equals' token following the identifier in var declaration."
         );
 
+        // Parse the assigned expression and create a Variable Declaration node.
         const declaration = {
             kind: "VarDeclaration",
             value: this.parse_expr(),
@@ -217,6 +280,7 @@ export default class Parser {
             constant: isConstant,
         } as VarDeclaration;
 
+        // Expect a semicolon to terminate the variable declaration statement.
         this.expect(
             TokenType.Semicolon,
             "Variable declaration statement must end with a semicolon."
@@ -225,7 +289,9 @@ export default class Parser {
         return declaration;
     }
 
-    private parse_expr (): Expr {
+    // Parse an expression, which starts with an assignment expression.
+    private parse_expr(): Expr {
+        // Delegates the parsing to the assignment expression parser.
         return this.parse_assignment_expr();
     }
 
@@ -289,13 +355,18 @@ export default class Parser {
       return { kind: "ObjectLiteral", properties } as ObjectLiteral;
     }
 
-    private parse_additive_expr (): Expr {
+    private parse_additive_expr(): Expr {
+        // Parse the left operand as a multiplicative expression
         let left = this.parse_multiplicative_expr();
-
-        while (this.at().value == "+" || this.at().value == "-") {
+    
+        // While the current token is '+' or '-', continue parsing binary expressions
+        while (this.at().value === "+" || this.at().value === "-") {
+            // Get the operator
             const operator = this.eat().value;
+            // Parse the right operand as a multiplicative expression
             const right = this.parse_multiplicative_expr();
-            
+    
+            // Create a Binary Expression node
             left = {
                 kind: "BinaryExpr",
                 left,
@@ -303,18 +374,23 @@ export default class Parser {
                 operator,
             } as BinaryExpr;
         }
-
+    
         return left;
     }
-
+    
     private parse_comparison_expr(): Expr {
+        // Parse the left operand as an additive expression
         let left = this.parse_additive_expr();
     
+        // If the current token is '==', parse multiple comparison expressions
         if (this.at().value === "==") {
             while (this.at().value === "==") {
+                // Get the operator
                 const operator = this.eat().value;
+                // Parse the right operand as an additive expression
                 const right = this.parse_additive_expr();
     
+                // Create a Binary Expression node
                 left = {
                     kind: "BinaryExpr",
                     left,
@@ -326,9 +402,6 @@ export default class Parser {
     
         return left;
     }
-    
-    
-    
 
     private parse_multiplicative_expr (): Expr {
         let left = this.parse_call_member_expr();
