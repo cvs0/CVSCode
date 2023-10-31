@@ -1,5 +1,5 @@
 import Environment from "./environment.ts";
-import { MK_NULL, MK_NUMBER, RuntimeVal } from "./values.ts";
+import { MK_BOOL, MK_NULL, MK_NUMBER, RuntimeVal } from "./values.ts";
 
 export function sqrtFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
@@ -389,4 +389,109 @@ export function printlnFunction(args: RuntimeVal[], _env: Environment) {
     console.log(...args.map(arg => arg.toString()));
     console.log(); // Print a newline after the arguments
     return MK_NULL();
+}
+
+export function factorialFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "factorial function expects exactly one argument.";
+    }
+
+    const n = args[0].value as number;
+
+    if (!Number.isInteger(n) || n < 0) {
+        throw "Argument must be a non-negative integer for factorial.";
+    }
+
+    let result = 1;
+    for (let i = 2; i <= n; i++) {
+        result *= i;
+    }
+
+    return MK_NUMBER(result);
+}
+
+export function isPrimeFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "isPrime function expects exactly one argument.";
+    }
+
+    const number = args[0].value as number;
+
+    if (!Number.isInteger(number) || number <= 1) {
+        throw "Argument must be a positive integer for prime check.";
+    }
+
+    for (let i = 2; i <= Math.sqrt(number); i++) {
+        if (number % i === 0) {
+            return MK_BOOL(false);
+        }
+    }
+
+    return MK_BOOL(true);
+}
+
+export function fibonacciFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "fibonacci function expects exactly one argument.";
+    }
+
+    const n = args[0].value as number;
+
+    if (!Number.isInteger(n) || n < 0) {
+        throw "Argument must be a non-negative integer for Fibonacci.";
+    }
+
+    const fib = (n: number) => {
+        if (n <= 1) return n;
+        let a = 0;
+        let b = 1;
+        for (let i = 2; i <= n; i++) {
+            const temp = a + b;
+            a = b;
+            b = temp;
+        }
+        return b;
+    };
+
+    return MK_NUMBER(fib(n));
+}
+
+export function meanFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length < 1) {
+        throw "mean function expects at least one argument.";
+    }
+
+    const numbers = args.map(arg => arg.value as number);
+
+    const result = numbers.reduce((sum, number) => sum + number, 0) / numbers.length;
+    return MK_NUMBER(result);
+}
+
+export function medianFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length < 1) {
+        throw "median function expects at least one argument.";
+    }
+
+    const numbers = args.map(arg => arg.value as number);
+
+    numbers.sort((a, b) => a - b);
+
+    if (numbers.length % 2 === 0) {
+        const mid = numbers.length / 2;
+        const median = (numbers[mid - 1] + numbers[mid]) / 2;
+        return MK_NUMBER(median);
+    } else {
+        const mid = Math.floor(numbers.length / 2);
+        return MK_NUMBER(numbers[mid]);
+    }
+}
+
+export function isIntFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "isInt function expects exactly one argument.";
+    }
+
+    const value = args[0].value;
+    const result = Number.isInteger(value);
+    return MK_BOOL(result);
 }

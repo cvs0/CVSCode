@@ -11,12 +11,18 @@ import {
     degToRadFunction,
     expFunction,
     expm1Function,
+    factorialFunction,
+    fibonacciFunction,
     floorFunction,
     gcdFunction,
     hypotFunction,
+    isIntFunction,
+    isPrimeFunction,
     log10Function,
     logFunction,
     maxFunction,
+    meanFunction,
+    medianFunction,
     minFunction,
     pow10Function,
     powFunction,
@@ -89,6 +95,12 @@ export function createGlobalEnv() {
     env.declareVar("randint", MK_NATIVE_FN(randIntFunction), true);
     env.declareVar("degToRad", MK_NATIVE_FN(degToRadFunction), true);
     env.declareVar("gcd", MK_NATIVE_FN(gcdFunction), true);
+    env.declareVar("factorial", MK_NATIVE_FN(factorialFunction), true);
+    env.declareVar("isPrime", MK_NATIVE_FN(isPrimeFunction), true);
+    env.declareVar("fibonacci", MK_NATIVE_FN(fibonacciFunction), true);
+    env.declareVar("mean", MK_NATIVE_FN(meanFunction), true);
+    env.declareVar("median", MK_NATIVE_FN(medianFunction), true);
+    env.declareVar("isInt", MK_NATIVE_FN(isIntFunction), true);
     
     return env;
 }
