@@ -381,12 +381,12 @@ export function gcdFunction(args: RuntimeVal[], _env: Environment) {
 }
 
 export function printFunction(args: RuntimeVal[], _env: Environment) {
-    console.log(...args.map(arg => arg.toString()));
+    console.log(...args);
     return MK_NULL();
 }
 
 export function printlnFunction(args: RuntimeVal[], _env: Environment) {
-    console.log(...args.map(arg => arg.toString()));
+    console.log(...args);
     console.log(); // Print a newline after the arguments
     return MK_NULL();
 }
@@ -494,4 +494,15 @@ export function isIntFunction(args: RuntimeVal[], _env: Environment) {
     const value = args[0].value;
     const result = Number.isInteger(value);
     return MK_BOOL(result);
+}
+
+// STRING
+
+export function strLenFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "strLen function expects exactly one string argument.";
+    }
+
+    const str = args[0].value as string;
+    return MK_NUMBER(str.length);
 }

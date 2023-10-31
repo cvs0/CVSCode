@@ -36,6 +36,7 @@ import {
     sinhFunction,
     sqrFunction,
     sqrtFunction,
+    strLenFunction,
     tanFunction,
     tanhFunction,
     timeFunction,
@@ -101,7 +102,10 @@ export function createGlobalEnv() {
     env.declareVar("mean", MK_NATIVE_FN(meanFunction), true);
     env.declareVar("median", MK_NATIVE_FN(medianFunction), true);
     env.declareVar("isInt", MK_NATIVE_FN(isIntFunction), true);
-    
+
+    // STRING
+    env.declareVar("strLen", MK_NATIVE_FN(strLenFunction), true);
+
     return env;
 }
 
