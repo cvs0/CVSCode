@@ -379,3 +379,14 @@ export function gcdFunction(args: RuntimeVal[], _env: Environment) {
 
     return MK_NUMBER(result);
 }
+
+export function printFunction(args: RuntimeVal[], _env: Environment) {
+    console.log(...args.map(arg => arg.toString()));
+    return MK_NULL();
+}
+
+export function printlnFunction(args: RuntimeVal[], _env: Environment) {
+    console.log(...args.map(arg => arg.toString()));
+    console.log(); // Print a newline after the arguments
+    return MK_NULL();
+}

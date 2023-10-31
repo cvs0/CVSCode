@@ -20,6 +20,8 @@ import {
     minFunction,
     pow10Function,
     powFunction,
+    printFunction,
+    printlnFunction,
     randIntFunction,
     rndFunction,
     roundFunction,
@@ -50,16 +52,12 @@ export function createGlobalEnv() {
     env.declareVar("null", MK_NULL(), true);
 
     // define native built-in functions
-    env.declareVar("print", MK_NATIVE_FN((args, _scope) => {
-        console.log(...args);
-        return MK_NULL();
-    }), true);
-    env.declareVar("println", MK_NATIVE_FN((args, _scope) => {
-        console.log(...args);
-        return MK_NULL();
-    }), true);
+    env.declareVar("print", MK_NATIVE_FN(printFunction), true);
+    env.declareVar("println", MK_NATIVE_FN(printlnFunction), true);
     env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
     env.declareVar("log", MK_NATIVE_FN(logFunction), true);
+
+    // MATH
     env.declareVar("random", MK_NATIVE_FN(rndFunction), true);
     env.declareVar("sqrt", MK_NATIVE_FN(sqrtFunction), true);
     env.declareVar("pow", MK_NATIVE_FN(powFunction), true);
