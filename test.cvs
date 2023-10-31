@@ -1,7 +1,3 @@
-let x = 2;
+let x = sqrt(10);
 
-if(x == 25) {
-    print(x)
-} else {
-    print('X does not equal 25 ')
-}
+print(x)

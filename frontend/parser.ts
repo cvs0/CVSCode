@@ -37,11 +37,12 @@ export default class Parser {
 
     private eat () {
         const prev = this.tokens.shift() as Token;
+        
         return prev;
     }
 
     private expect (type: TokenType, err: any) {
-        const prev = this.tokens.shift() as Token;
+        const prev = this.eat();
 
         if(!prev || prev.type != type) {
             console.error("Parser Error:\n", err, prev, " - Expecting: ", type)
@@ -564,7 +565,7 @@ export default class Parser {
             case TokenType.Number:
                 return {
                     kind: "NumericLiteral",
-                     value: parseFloat(this.eat().value)
+                    value: parseFloat(this.eat().value)
                 } as NumericLiteral;
             
             case TokenType.String:

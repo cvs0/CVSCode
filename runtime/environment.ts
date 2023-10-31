@@ -1,4 +1,31 @@
-import { MK_BOOL, MK_NATIVE_FN, MK_NULL, MK_NUMBER, RuntimeVal} from "./values.ts";
+import {
+    absFunction,
+    acosFunction,
+    asinFunction,
+    atanFunction,
+    ceilFunction,
+    cosFunction,
+    expFunction,
+    floorFunction,
+    logFunction,
+    maxFunction,
+    minFunction,
+    powFunction,
+    rndFunction,
+    roundFunction,
+    sinFunction,
+    sqrtFunction,
+    tanFunction,
+    timeFunction
+} from "./native.ts";
+
+import {
+    MK_BOOL,
+    MK_NATIVE_FN,
+    MK_NULL,
+    MK_NUMBER,
+    RuntimeVal
+} from "./values.ts";
 
 export function createGlobalEnv() {
     const env = new Environment();
@@ -12,33 +39,28 @@ export function createGlobalEnv() {
         console.log(...args);
         return MK_NULL();
     }), true);
-
     env.declareVar("println", MK_NATIVE_FN((args, _scope) => {
         console.log(...args);
         return MK_NULL();
     }), true);
-
-
-
-    function timeFunction (_args: RuntimeVal[], _env: Environment) {
-        return MK_NUMBER(Date.now());
-    }
-
     env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
-
-    function logFunction(args: RuntimeVal[], _env: Environment) {
-        const message = args.map(arg => arg.toString()).join(" ");
-        console.log(message);
-        return MK_NULL();
-    }
-    
-    env.declareVar("log", MK_NATIVE_FN(logFunction), true);    
-
-    function rndFunction(_args: RuntimeVal[], _env: Environment) {
-        return MK_NUMBER(Math.random());
-    }
-
+    env.declareVar("log", MK_NATIVE_FN(logFunction), true);
     env.declareVar("random", MK_NATIVE_FN(rndFunction), true);
+    env.declareVar("sqrt", MK_NATIVE_FN(sqrtFunction), true);
+    env.declareVar("pow", MK_NATIVE_FN(powFunction), true);
+    env.declareVar("round", MK_NATIVE_FN(roundFunction), true);
+    env.declareVar("abs", MK_NATIVE_FN(absFunction), true);
+    env.declareVar("ceil", MK_NATIVE_FN(ceilFunction), true);
+    env.declareVar("floor", MK_NATIVE_FN(floorFunction), true);
+    env.declareVar("min", MK_NATIVE_FN(minFunction), true);
+    env.declareVar("max", MK_NATIVE_FN(maxFunction), true);
+    env.declareVar("exp", MK_NATIVE_FN(expFunction), true);
+    env.declareVar("sin", MK_NATIVE_FN(sinFunction), true);
+    env.declareVar("cos", MK_NATIVE_FN(cosFunction), true);
+    env.declareVar("tan", MK_NATIVE_FN(tanFunction), true);
+    env.declareVar("asin", MK_NATIVE_FN(asinFunction), true);
+    env.declareVar("acos", MK_NATIVE_FN(acosFunction), true);
+    env.declareVar("atan", MK_NATIVE_FN(atanFunction), true);
     
     return env;
 }
