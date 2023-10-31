@@ -2,21 +2,36 @@ import {
     absFunction,
     acosFunction,
     asinFunction,
+    atan2Function,
     atanFunction,
     ceilFunction,
     cosFunction,
+    coshFunction,
+    cubicFunction,
+    degToRadFunction,
     expFunction,
+    expm1Function,
     floorFunction,
+    gcdFunction,
+    hypotFunction,
+    log10Function,
     logFunction,
     maxFunction,
     minFunction,
+    pow10Function,
     powFunction,
+    randIntFunction,
     rndFunction,
     roundFunction,
+    signFunction,
     sinFunction,
+    sinhFunction,
+    sqrFunction,
     sqrtFunction,
     tanFunction,
-    timeFunction
+    tanhFunction,
+    timeFunction,
+    truncFunction
 } from "./native.ts";
 
 import {
@@ -61,6 +76,21 @@ export function createGlobalEnv() {
     env.declareVar("asin", MK_NATIVE_FN(asinFunction), true);
     env.declareVar("acos", MK_NATIVE_FN(acosFunction), true);
     env.declareVar("atan", MK_NATIVE_FN(atanFunction), true);
+    env.declareVar("sinh", MK_NATIVE_FN(sinhFunction), true);
+    env.declareVar("cosh", MK_NATIVE_FN(coshFunction), true);
+    env.declareVar("tanh", MK_NATIVE_FN(tanhFunction), true);
+    env.declareVar("expm1", MK_NATIVE_FN(expm1Function), true);
+    env.declareVar("log10", MK_NATIVE_FN(log10Function), true);
+    env.declareVar("sqr", MK_NATIVE_FN(sqrFunction), true);
+    env.declareVar("cubic", MK_NATIVE_FN(cubicFunction), true);
+    env.declareVar("pow10", MK_NATIVE_FN(pow10Function), true);
+    env.declareVar("atan2", MK_NATIVE_FN(atan2Function), true);
+    env.declareVar("hypot", MK_NATIVE_FN(hypotFunction), true);
+    env.declareVar("trunc", MK_NATIVE_FN(truncFunction), true);
+    env.declareVar("sgn", MK_NATIVE_FN(signFunction), true);
+    env.declareVar("randint", MK_NATIVE_FN(randIntFunction), true);
+    env.declareVar("degToRad", MK_NATIVE_FN(degToRadFunction), true);
+    env.declareVar("gcd", MK_NATIVE_FN(gcdFunction), true);
     
     return env;
 }

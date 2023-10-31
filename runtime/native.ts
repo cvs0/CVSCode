@@ -196,3 +196,186 @@ export function atanFunction(args: RuntimeVal[], _env: Environment) {
     const result = Math.atan(value);
     return MK_NUMBER(result);
 }
+
+export function sinhFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "sinh function expects exactly one argument.";
+    }
+
+    const value = args[0].value as number;
+
+    const result = Math.sinh(value);
+    return MK_NUMBER(result);
+}
+
+export function coshFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "cosh function expects exactly one argument.";
+    }
+
+    const value = args[0].value as number;
+
+    const result = Math.cosh(value);
+    return MK_NUMBER(result);
+}
+
+export function tanhFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "tanh function expects exactly one argument.";
+    }
+
+    const value = args[0].value as number;
+
+    const result = Math.tanh(value);
+    return MK_NUMBER(result);
+}
+
+export function expm1Function(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "expm1 function expects exactly one argument.";
+    }
+
+    const value = args[0].value as number;
+
+    const result = Math.expm1(value);
+    return MK_NUMBER(result);
+}
+
+export function log10Function(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "log10 function expects exactly one argument.";
+    }
+
+    const value = args[0].value as number;
+
+    if (value <= 0) {
+        throw "The argument must be greater than 0 for base-10 logarithm.";
+    }
+
+    const result = Math.log10(value);
+    return MK_NUMBER(result);
+}
+
+export function sqrFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "sqr function expects exactly one argument.";
+    }
+
+    const number = args[0].value as number;
+
+    const result = Math.pow(number, 2);
+    return MK_NUMBER(result);
+}
+
+export function cubicFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "cubic function expects exactly one argument.";
+    }
+
+    const number = args[0].value as number;
+
+    const result = Math.pow(number, 3);
+    return MK_NUMBER(result);
+}
+
+export function pow10Function(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "pow10 function expects exactly one argument.";
+    }
+
+    const power = args[0].value as number;
+
+    const result = Math.pow(10, power);
+    return MK_NUMBER(result);
+}
+
+export function atan2Function(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 2) {
+        throw "atan2 function expects exactly two arguments.";
+    }
+
+    const y = args[0].value as number;
+    const x = args[1].value as number;
+
+    const result = Math.atan2(y, x);
+    return MK_NUMBER(result);
+}
+
+export function hypotFunction(args: RuntimeVal[], _env: Environment) {
+    const numbers = args.map(arg => arg.value as number);
+
+    const result = Math.hypot(...numbers);
+    return MK_NUMBER(result);
+}
+
+export function truncFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "trunc function expects exactly one argument.";
+    }
+
+    const number = args[0].value as number;
+
+    const result = Math.trunc(number);
+    return MK_NUMBER(result);
+}
+
+export function signFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "sign function expects exactly one argument.";
+    }
+
+    const number = args[0].value as number;
+
+    if (number > 0) return MK_NUMBER(1);
+    if (number < 0) return MK_NUMBER(-1);
+    return MK_NUMBER(0);
+}
+
+export function randIntFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 2) {
+        throw "randInt function expects exactly two arguments.";
+    }
+
+    const min = args[0].value as number;
+    const max = args[1].value as number;
+
+    const result = Math.floor(Math.random() * (max - min + 1) + min);
+    return MK_NUMBER(result);
+}
+
+export function degToRadFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "degToRad function expects exactly one argument.";
+    }
+
+    const degrees = args[0].value as number;
+    const radians = (degrees * Math.PI) / 180;
+
+    return MK_NUMBER(radians);
+}
+
+export function gcdFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length < 2) {
+        throw "gcd function expects at least two arguments.";
+    }
+
+    const numbers = args.map(arg => {
+        const value = arg.value as number;
+        if (!Number.isInteger(value)) {
+            throw "Arguments must be integers for gcd.";
+        }
+        return value;
+    });
+
+    const getGCD = (a: number, b: number): number => {
+        if (b === 0) return a;
+        return getGCD(b, a % b);
+    };
+
+    let result = numbers[0];
+    for (let i = 1; i < numbers.length; i++) {
+        result = getGCD(result, numbers[i]);
+    }
+
+    return MK_NUMBER(result);
+}
