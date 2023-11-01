@@ -36,7 +36,11 @@ import {
     sinhFunction,
     sqrFunction,
     sqrtFunction,
+    strEndsWithFunction,
+    strIncludesFunction,
     strLenFunction,
+    strStartsWithFunction,
+    strToUppercaseFunction,
     tanFunction,
     tanhFunction,
     timeFunction,
@@ -105,6 +109,10 @@ export function createGlobalEnv() {
 
     // STRING
     env.declareVar("strLen", MK_NATIVE_FN(strLenFunction), true);
+    env.declareVar("strIncludes", MK_NATIVE_FN(strIncludesFunction), true);
+    env.declareVar("strEndsWith", MK_NATIVE_FN(strEndsWithFunction), true);
+    env.declareVar("strStartsWith", MK_NATIVE_FN(strStartsWithFunction), true);
+    env.declareVar("strToUppercase", MK_NATIVE_FN(strToUppercaseFunction), true);
 
     return env;
 }

@@ -1,4 +1,4 @@
-import { Stmt } from "../frontend/ast.ts";
+import { Stmt, StringLiteral } from "../frontend/ast.ts";
 import Environment from "./environment.ts";
 
 // deno-lint-ignore-file no-inferrable-types no-inferrable-types no-inferrable-types
@@ -65,4 +65,11 @@ export interface FunctionValue extends RuntimeVal {
     parameters: string[],
     declarationEnv: Environment,
     body: Stmt[],
+}
+
+export function MK_STRING(value: string): RuntimeVal {
+    return {
+        type: "string", // Indicate that it's a string
+        value: value,
+    };
 }

@@ -1,5 +1,5 @@
 import Environment from "./environment.ts";
-import { MK_BOOL, MK_NULL, MK_NUMBER, RuntimeVal } from "./values.ts";
+import { MK_BOOL, MK_NULL, MK_NUMBER, MK_STRING, RuntimeVal } from "./values.ts";
 
 export function sqrtFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
@@ -505,4 +505,67 @@ export function strLenFunction(args: RuntimeVal[], _env: Environment) {
 
     const str = args[0].value as string;
     return MK_NUMBER(str.length);
+}
+
+export function strIncludesFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 2) {
+        throw "strIncludes function expects exactly two string arguments.";
+    }
+
+    const str = args[0].value as string;
+    const substring = args[1].value as string;
+
+    if (str.includes(substring)) {
+        return MK_BOOL(true);
+    } else {
+        return MK_BOOL(false);
+    }
+}
+
+export function strEndsWithFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 2) {
+        throw "strEndsWith function expects exactly two string arguements.";
+    }
+
+    const str = args[0].value as string;
+    const substring = args[1].value as string;
+    
+    if (str.endsWith(substring)) {
+        return MK_BOOL(true);
+    } else {
+        return MK_BOOL(false);
+    }
+}
+
+export function strStartsWithFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 2) {
+        throw "strStartsWith function expects exactly two string arguements.";
+    }
+
+    const str = args[0].value as string;
+    const substring = args[1].value as string
+
+    if (str.startsWith(substring)) {
+        return MK_BOOL(true);
+    } else {
+        return MK_BOOL(false);
+    }
+}
+
+export function strToUppercaseFunction (args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "strToUppercase function expects exactly one string arguement.";
+    }
+
+    const str = args[0].value as string;
+
+    return MK_STRING(str.toUpperCase());
+}
+
+export function strToLowerCaseFunction (args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "strToLowerCase function expects exactly one string arguement."
+    }
+
+    const str = args[0]
 }
