@@ -118,6 +118,10 @@ export function createGlobalEnv() {
     env.declareVar("strToUppercase", MK_NATIVE_FN(strToUppercaseFunction), true);
     env.declareVar("strReverse", MK_NATIVE_FN(strReverseFunction), true);
     env.declareVar("strTrim", MK_NATIVE_FN(strTrimFunction), true);
+    env.declareVar("strCharAt", MK_NATIVE_FN(strCharAtFunction), true);
+    env.declareVar("strNormalize", MK_NATIVE_FN(strNormalizeFunction), true);
+    env.declareVar("strTrimStart", MK_NATIVE_FN(strTrimStartFunction), true);
+    env.declareVar("strTrimEnd", MK_NATIVE_FN(strTrimEndFunction), true);
 
     return env;
 }

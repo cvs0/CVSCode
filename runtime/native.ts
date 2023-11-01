@@ -564,7 +564,7 @@ export function strToUppercaseFunction (args: RuntimeVal[], _env: Environment) {
 
 export function strToLowerCaseFunction (args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
-        throw "strToLowerCase function expects exactly one string arguement."
+        throw "strToLowerCase function expects exactly one string arguement.";
     }
 
     const str = args[0].value as string;
@@ -574,7 +574,7 @@ export function strToLowerCaseFunction (args: RuntimeVal[], _env: Environment) {
 
 export function strReverseFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
-        throw "strReverse function expects exactly one string argument.";
+        throw "strReverse function expects exactly one string arguement.";
     }
 
     const str = args[0].value as string;
@@ -585,10 +585,60 @@ export function strReverseFunction(args: RuntimeVal[], _env: Environment) {
 
 export function strTrimFunction (args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
-        throw "strTrim function expects exactly one string argument."
+        throw "strTrim function expects exactly one string arguement.";
     }
 
     const str = args[0].value as string;
     
     return MK_STRING(str.trim());
+}
+
+export function strCharAtFunction (args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 2) {
+        throw "strCharAt function expects exactly two string arguements.";
+    }
+
+    const str = args[0].value as string;
+    const index = args[1].value as number;
+
+    return MK_STRING(str.charAt(index));
+}
+
+export function strNormalizeFunction (args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 2) {
+        throw "strNormalize function expects exactly two string arguements.";
+    }
+
+    const str = args[0].value as string;
+    const mode = args[1].value as string;
+
+    if(mode === undefined) {
+        return MK_STRING(str.normalize(mode));
+    }
+
+    if (mode !== "NFC" && mode !== "NFD" && mode !== "NFKC" && mode !== "NFKD") {
+        throw "strNormalize mode must be one of the following: 'NFC', 'NFD', 'NFKC', 'NFKD'.";
+    }
+
+    return MK_STRING(str.normalize(mode));
+}
+
+export function strTrimStartFunction (args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "strTrim function expects exactly one string arguement.";
+    }
+
+    const str = args[0].value as string;
+    
+    return MK_STRING(str.trimStart());
+}
+
+export function strTrimEndFunction (args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "strTrim function expects exactly one string arguement.";
+    }
+
+    const str = args[0].value as string;
+    
+    return MK_STRING(str.trimEnd());
 }
