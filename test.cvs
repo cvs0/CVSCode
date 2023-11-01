@@ -1,3 +1,11 @@
 let x = "i";
 
+// comment test
+
+/*
+
+hi
+
+*/
+
 print(strToUppercase(x))

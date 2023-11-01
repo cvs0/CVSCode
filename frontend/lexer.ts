@@ -98,7 +98,41 @@ export function tokenize (sourceCode: string): Token[] {
 
     // Build each token until end of the file
     while (src.length > 0) {
-        if(src[0] == '(') {
+
+        if (src[0] === "/" && src[1] === "/") {
+            // @ts-ignore
+            while (src.length > 0 && src[0] !== "\n") {
+                src.shift();
+            }
+            // @ts-ignore
+            if (src[0] === "\n") {
+                src.shift();
+                line++;
+            }
+        }
+
+        else if (src[0] === "/" && src[1] === "*") {
+            src.shift();
+            src.shift();
+            // @ts-ignore
+            while (src.length > 0 && !(src[0] === "*" && src[1] === "/")) {
+                src.shift();
+                // @ts-ignore
+                if (src[0] === "\n") {
+                    line++;
+                }
+            }
+            // @ts-ignore
+            if (src[0] === "*" && src[1] === "/") {
+                src.shift();
+                src.shift();
+            } else {
+                console.error("Unterminated multi-line comment");
+                Deno.exit(1);
+            }
+        }
+        
+        else if(src[0] == '(') {
             tokens.push(token(src.shift(), TokenType.OpenParen));
         }
 
