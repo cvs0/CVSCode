@@ -39,8 +39,10 @@ import {
     strEndsWithFunction,
     strIncludesFunction,
     strLenFunction,
+    strReverseFunction,
     strStartsWithFunction,
     strToUppercaseFunction,
+    strTrimFunction,
     tanFunction,
     tanhFunction,
     timeFunction,
@@ -68,6 +70,7 @@ export function createGlobalEnv() {
     env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
     env.declareVar("log", MK_NATIVE_FN(logFunction), true);
 
+    
     // MATH
     env.declareVar("random", MK_NATIVE_FN(rndFunction), true);
     env.declareVar("sqrt", MK_NATIVE_FN(sqrtFunction), true);
@@ -113,6 +116,8 @@ export function createGlobalEnv() {
     env.declareVar("strEndsWith", MK_NATIVE_FN(strEndsWithFunction), true);
     env.declareVar("strStartsWith", MK_NATIVE_FN(strStartsWithFunction), true);
     env.declareVar("strToUppercase", MK_NATIVE_FN(strToUppercaseFunction), true);
+    env.declareVar("strReverse", MK_NATIVE_FN(strReverseFunction), true);
+    env.declareVar("strTrim", MK_NATIVE_FN(strTrimFunction), true);
 
     return env;
 }

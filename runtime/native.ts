@@ -567,5 +567,28 @@ export function strToLowerCaseFunction (args: RuntimeVal[], _env: Environment) {
         throw "strToLowerCase function expects exactly one string arguement."
     }
 
-    const str = args[0]
+    const str = args[0].value as string;
+
+    return MK_STRING(str.toLowerCase());
+}
+
+export function strReverseFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "strReverse function expects exactly one string argument.";
+    }
+
+    const str = args[0].value as string;
+    const reversedStr = str.split("").reverse().join("");
+
+    return MK_STRING(reversedStr);
+}
+
+export function strTrimFunction (args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 1) {
+        throw "strTrim function expects exactly one string argument."
+    }
+
+    const str = args[0].value as string;
+    
+    return MK_STRING(str.trim());
 }
