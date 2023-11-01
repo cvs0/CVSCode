@@ -1,11 +1,6 @@
-let x = "i";
+let x = 25;
+let y = 20;
 
-// comment test
-
-/*
-
-hi
-
-*/
-
-print(strToUppercase(x))
+if (x + y == 45) {
+    print("Result was true.")
+}
