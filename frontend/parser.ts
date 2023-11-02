@@ -126,7 +126,7 @@ export default class Parser {
     
     parse_block(): Stmt {
         // Expect an opening brace to start a block statement
-        this.expect(TokenType.OpenBrace, "Expected opening brace for block.");
+        this.expect(TokenType.OpenBrace, "Error: Missing Opening Brace '{' for Code Block.");
     
         // Initialize an array to store statements within the block
         const body = new Array<Stmt>();
@@ -138,7 +138,7 @@ export default class Parser {
         }
     
         // Expect a closing brace to end the block statement
-        this.expect(TokenType.CloseBrace, "Expected closing brace for block.");
+        this.expect(TokenType.CloseBrace, "Error: Missing Closing Brace '}' for Code Block.");
     
         // Return a Block Statement containing the parsed statements
         return {
@@ -152,7 +152,7 @@ export default class Parser {
         this.eat();
         
         // Expect an opening parenthesis after the 'if' statement
-        this.expect(TokenType.OpenParen, "Expected opening parenthesis after if statement.");
+        this.expect(TokenType.OpenParen, "Error: Missing Opening Parenthesis '(' After 'if' Statement.");
     
         // Parse the condition expression within the if statement
         const condition = this.parse_expr();
@@ -161,7 +161,7 @@ export default class Parser {
         let alternate: Stmt | undefined;
     
         // Expect a closing parenthesis after the condition expression
-        this.expect(TokenType.CloseParen, "Expected closing parenthesis after if statement.");
+        this.expect(TokenType.CloseParen, "Error: Missing Closing Parenthesis ')' After 'if' Statement Condition.");
     
         // Parse the consequence (true-branch) of the if statement
         const consequence = this.parse_stmt();
@@ -190,7 +190,7 @@ export default class Parser {
         // Expect and extract the function name
         const name = this.expect(
             TokenType.Identifier,
-            "Expected function name following fn keyword"
+            "Error: Missing Function Name After 'fn' Keyword."
         ).value;
     
         // Parse function arguments and store them in 'args'
@@ -211,7 +211,7 @@ export default class Parser {
         // Expect an opening brace to start the function body
         this.expect(
             TokenType.OpenBrace,
-            "Expected function body following declaration"
+            "Error: Incomplete Function Declaration - Missing Function Body."
         );
     
         // Initialize an array to store statements within the function body
@@ -228,7 +228,7 @@ export default class Parser {
         // Expect a closing brace to end the function declaration
         this.expect(
             TokenType.CloseBrace,
-            "Closing brace expected inside function declaration"
+            "Error: Incomplete Function Declaration - Missing Closing Brace '}'."
         );
     
         // Create a Function Declaration node with the parsed information
@@ -250,7 +250,7 @@ export default class Parser {
         // Expect and extract the identifier name.
         const identifier = this.expect(
             TokenType.Identifier,
-            "Expected identifier name following let | const keywords."
+            "Error: Missing Identifier Name After 'let' or 'const' Keywords."
         ).value;
 
         // If the statement ends with a semicolon, it's a declaration without an assignment.
@@ -271,7 +271,7 @@ export default class Parser {
         // Expect an 'equals' token (=) to indicate an assignment.
         this.expect(
             TokenType.Equals,
-            "Expected 'equals' token following the identifier in var declaration."
+            "Error: Incomplete Variable Declaration - Missing 'equals' Token '=' After Identifier."
         );
 
         // Parse the assigned expression and create a Variable Declaration node.
@@ -285,7 +285,7 @@ export default class Parser {
         // Expect a semicolon to terminate the variable declaration statement.
         this.expect(
             TokenType.Semicolon,
-            "Variable declaration statement must end with a semicolon."
+            "Error: Incomplete Variable Declaration - Missing Semicolon ';' at the End of Statement."
         );
 
         return declaration;
@@ -334,7 +334,7 @@ export default class Parser {
         // Continue parsing properties while not reaching the end of the input or a closing brace.
         while (this.not_eof() && this.at().type !== TokenType.CloseBrace) {
             // Expect an identifier as the key for each property in the object literal.
-            const key = this.expect(TokenType.Identifier, "Object literal key expected.").value;
+            const key = this.expect(TokenType.Identifier, "Error: Incomplete Object Literal - Missing Key for Property.").value;
 
             // Handle shorthand key: pair -> { key, }
             if (this.at().type === TokenType.Comma) {
@@ -351,7 +351,7 @@ export default class Parser {
             // Expect a colon to separate the key and value in the object literal.
             this.expect(
                 TokenType.Colon,
-                "Expected colon following key in object literal."
+                "Error: Incomplete Object Literal - Missing Colon ':' After Key."
             );
             
             // Parse the value associated with the key in the object literal.
@@ -367,7 +367,7 @@ export default class Parser {
         }
 
         // Expect a closing brace to terminate the object literal.
-        this.expect(TokenType.CloseBrace, "Object literal missing a closing brace.");
+        this.expect(TokenType.CloseBrace, "Error: Incomplete Object Literal - Missing Closing Brace '}'.");
 
         // Return an Object Literal node with the parsed properties.
         return { kind: "ObjectLiteral", properties } as ObjectLiteral;
@@ -479,7 +479,7 @@ export default class Parser {
     // Parse a list of arguments within open and closing parentheses
     private parse_args(): Expr[] {
         // Expect an open parenthesis to start the arguments list
-        this.expect(TokenType.OpenParen, "Expected open parenthesis.");
+        this.expect(TokenType.OpenParen, "Error: Missing Opening Parenthesis '('.");
 
         // Initialize an array to store parsed arguments; it can be empty
         const args = this.at().type === TokenType.CloseParen
@@ -487,7 +487,7 @@ export default class Parser {
             : this.parse_arguments_list();
 
         // Expect a closing parenthesis to end the arguments list
-        this.expect(TokenType.CloseParen, "Missing closing parenthesis inside arguments list.");
+        this.expect(TokenType.CloseParen, "Error: Incomplete Argument List - Missing Closing Parenthesis ')'.");
 
         return args;
     }
@@ -529,7 +529,7 @@ export default class Parser {
             } else { // Allows object[computedValue] (square bracket notation)
                 computed = true;
                 property = this.parse_expr(); // Parse the computed property expression
-                this.expect(TokenType.CloseBracket, "Missing closing bracket in computed value.");
+                this.expect(TokenType.CloseBracket, "Error: Incomplete Computed Value - Missing Closing Bracket ']'.");
             }
 
             // Create a Member Expression node representing the property access
@@ -580,7 +580,7 @@ export default class Parser {
 
                 const value = this.parse_expr();
 
-                this.expect(TokenType.CloseParen, "Unexpected token found inside parenthesised experession. Expected closing parenthesis."); // closing param
+                this.expect(TokenType.CloseParen, "Error: Unexpected Token Inside Parenthesized Expression - Missing Closing Parenthesis ')'."); // closing param
 
                 return value
             }
