@@ -111,9 +111,9 @@ For more details on the MIT License, please refer to the [LICENSE](LICENSE) file
 
 ## Contributors
 
-We welcome contributions from the community. By contributing to this project, you agree to release your contributions under the terms of the MIT License. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute.
+We welcome contributions from the community. By contributing to this project, you agree to release your contributions under the terms of the MIT License. See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for guidelines on how to contribute.
 
 ## Disclaimer
 
-This project is provided as-is, and the authors and contributors are not liable for any issues or damages that may arise from its use. For more information, please read our [DISCLAIMER](DISCLAIMER.md) statement.
+This project is provided as-is, and the authors and contributors are not liable for any issues or damages that may arise from its use. For more information, please read our [DISCLAIMER](docs/DISCLAIMER.md) statement.
 
