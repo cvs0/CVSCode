@@ -1,5 +1,5 @@
 import Environment from "../environment.ts";
-import { RuntimeVal,MK_NUMBER,MK_NULL,MK_BOOL } from "../values.ts";
+import { RuntimeVal,MK_NUMBER } from "../values.ts";
 
 export function powFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 2) {
