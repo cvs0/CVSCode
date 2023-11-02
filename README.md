@@ -47,22 +47,22 @@ This project is made possible by the contributions and efforts of the following 
 
 # How to use:
 ## How to Launch the REPL (Read-Eval-Print-Loop):
-    Clone the CVSCode github repository to your local machine with this command:
+  Clone the CVSCode github repository to your local machine with this command:
     ```bash
     git clone https://github.com/cvs0/cvscode.git
     ```
 
-    Navigate to the CVSCode directory that we just downloaded the project to:
+  Navigate to the CVSCode directory that we just downloaded the project to:
     ```bash
     cd cvscode
     ```
 
-    Start the REPL interface;
+  Start the REPL interface;
     ```bash
     deno run -A main.ts
     ```
 
-    Run your script (while in the REPL interface):
+  Run your script (while in the REPL interface):
     ```bash
     run <filename>.cvs
     ```
