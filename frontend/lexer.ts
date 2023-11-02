@@ -1,4 +1,4 @@
-// deno-lint-ignore-file no-inferrable-types no-unused-vars prefer-const
+// deno-lint-ignore-file no-inferrable-types no-unused-vars prefer-const ban-ts-comment
 
 export enum TokenType {
     // Literal Types
