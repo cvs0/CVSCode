@@ -5,19 +5,34 @@
 CVSCode is a simple scripting language that is built with TypeScript, made by CVS0. It uses Deno to launch the Repl, from that you can use the CVSCode command line interface to launch / debug your  CVSCode scripts.
 
 # Features:
-* Let / Const variables.
-* Frequently updated.
-* Fast language.
-* Detailed error logs.
-* Similar syntax to JavaScript / TypeScript.
-* Custom user defined functions.
-* Objects.
-* Userdefined structures.
-* Function calls.
-* Object member expressions.
-* If statements.
-* Else statements.
-* Comments.
+
+- **Let / Const Variables:** This project allows you to declare and use variables using the "let" and "const" keywords, similar to JavaScript and TypeScript, providing flexibility and scope control.
+
+- **Frequent Updates:** We are committed to providing frequent updates to enhance and improve the project, ensuring it remains up to date with the latest developments.
+
+- **High Performance:** This project is designed for speed, offering a fast and efficient programming experience.
+
+- **Detailed Error Logs:** In case of errors, the project provides detailed error logs to assist developers in diagnosing and resolving issues quickly.
+
+- **JavaScript/TypeScript-Like Syntax:** This language features a syntax that's familiar to JavaScript and TypeScript developers, making it easy to transition and work with.
+
+- **Custom User-Defined Functions:** Create your own custom functions, allowing you to encapsulate and reuse code efficiently.
+
+- **Objects:** Utilize objects to structure and organize your data, providing a convenient way to work with complex data.
+
+- **User-Defined Structures:** Define custom data structures tailored to your specific needs for data organization.
+
+- **Function Calls:** Implement function calls to execute code blocks and achieve various tasks within your projects.
+
+- **Object Member Expressions:** Access and manipulate object properties and members using intuitive expressions.
+
+- **Conditional Statements:** Use "if" statements to add logic and control flow to your code, enhancing decision-making capabilities.
+
+- **Else Statements:** Complement "if" statements with "else" for handling alternative scenarios and further control flow.
+
+- **Comments:** Add comments to your code for documentation and clarification, making it easier for both yourself and others to understand the codebase.
+
+These features collectively make CVSCode a versatile and powerful programming language for a wide range of applications.
 
 # TODO:
 * loops
@@ -27,25 +42,25 @@ CVSCode is a simple scripting language that is built with TypeScript, made by CV
 * tlaceby
 
 # How to use:
-* How to launch the repl:
-    Download CVSCode:
+## How to Launch the REPL (Read-Eval-Print-Loop):
+    Clone the CVSCode github repository to your local machine with this command:
     ```bash
     git clone https://github.com/cvs0/cvscode.git
     ```
 
-    CD into the directory:
+    Navigate to the CVSCode directory that we just downloaded the project to:
     ```bash
     cd cvscode
     ```
 
-    Launch the repl:
+    Start the REPL interface;
     ```bash
     deno run -A main.ts
     ```
 
-    Run your script (while in the repl interface):
+    Run your script (while in the REPL interface):
     ```bash
-    run test.cvs
+    run <filename>.cvs
     ```
 
 # Language-basics
