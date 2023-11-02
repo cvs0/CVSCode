@@ -18,6 +18,8 @@ export enum TokenType {
     Equals,             // =
     DoubleEquals,       // ==
     NotEquals,          // !=
+    DoubleEqualsStrict, // !==
+    NotEqualsStrict,    // !==
     Comma,              // ,
     Dot,                // .
     Colon,              // :
@@ -208,7 +210,11 @@ export function tokenize (sourceCode: string): Token[] {
 
         else if (src[0] == '=') {
             if (src[1] == '=') {
-                tokens.push(token(spliceFront(src, 2), TokenType.DoubleEquals));
+                if(src[2] == "=") {
+                    tokens.push(token(spliceFront(src, 3), TokenType.DoubleEqualsStrict));
+                } else {
+                    tokens.push(token(spliceFront(src, 2), TokenType.DoubleEquals));
+                }
             } else {
                 tokens.push(token(src.shift(), TokenType.Equals));
             }
@@ -216,7 +222,11 @@ export function tokenize (sourceCode: string): Token[] {
 
         else if (src[0] == "!") {
             if(src[1] == "=") {
-                tokens.push(token(spliceFront(src, 2), TokenType.NotEquals));
+                if(src[2] == "=") {
+                    tokens.push(token(spliceFront(src, 3), TokenType.NotEqualsStrict));
+                } else {
+                    tokens.push(token(spliceFront(src, 2), TokenType.NotEquals));
+                }
             } else {
                 tokens.push(token(src.shift(), TokenType.Not));
             }

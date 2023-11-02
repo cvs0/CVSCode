@@ -27,32 +27,42 @@ export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operato
     if (operator == "==") {
         return {
             value: lhs.value == rhs.value,
-            type: "boolean"
+            type: "boolean",
         };
     } else if (operator == "!=") {
         return {
             value: lhs.value != rhs.value,
-            type: "boolean"
+            type: "boolean",
         };
+    } else if (operator == "===") {
+        return {
+            value: lhs.value === rhs.value,
+            type: "boolean",
+        }
+    } else if (operator == "!==") {
+        return {
+            value: lhs.value !== rhs.value,
+            type: "boolean",
+        }
     } else if (operator == "<") {
         return {
             value: lhs.value < rhs.value,
-            type: "boolean"
+            type: "boolean",
         };
     } else if (operator == "<=") {
         return {
             value: lhs.value <= rhs.value,
-            type: "boolean"
+            type: "boolean",
         };
     } else if (operator == ">") {
         return {
             value: lhs.value > rhs.value,
-            type: "boolean"
+            type: "boolean",
         };
     } else if (operator == ">=") {
         return {
             value: lhs.value >= rhs.value,
-            type: "boolean"
+            type: "boolean",
         };
     } else if (operator == "&&" || operator == "||") {
         return {
