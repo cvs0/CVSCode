@@ -7,7 +7,7 @@ export function sqrtFunction(args: RuntimeVal[], _env: Environment) {
     }
 
     const number = args[0].value as number;
-    
+
     if (isNaN(number)) {
         throw "Argument must be a valid number.";
     }
@@ -27,11 +27,13 @@ export function rndFunction(_args: RuntimeVal[], _env: Environment) {
 
 export function logFunction(args: RuntimeVal[], _env: Environment) {
     const message = args.map(arg => arg.toString()).join(" ");
+
     console.log(message);
+
     return MK_NULL();
 }
 
-export function timeFunction (_args: RuntimeVal[], _env: Environment) {
+export function timeFunction(_args: RuntimeVal[], _env: Environment) {
     return MK_NUMBER(Date.now());
 }
 
@@ -329,6 +331,7 @@ export function signFunction(args: RuntimeVal[], _env: Environment) {
 
     if (number > 0) return MK_NUMBER(1);
     if (number < 0) return MK_NUMBER(-1);
+
     return MK_NUMBER(0);
 }
 
@@ -362,9 +365,11 @@ export function gcdFunction(args: RuntimeVal[], _env: Environment) {
 
     const numbers = args.map(arg => {
         const value = arg.value as number;
+
         if (!Number.isInteger(value)) {
             throw "Arguments must be integers for gcd.";
         }
+
         return value;
     });
 
@@ -374,6 +379,7 @@ export function gcdFunction(args: RuntimeVal[], _env: Environment) {
     };
 
     let result = numbers[0];
+
     for (let i = 1; i < numbers.length; i++) {
         result = getGCD(result, numbers[i]);
     }
@@ -404,6 +410,7 @@ export function factorialFunction(args: RuntimeVal[], _env: Environment) {
     }
 
     let result = 1;
+
     for (let i = 2; i <= n; i++) {
         result *= i;
     }
@@ -444,13 +451,17 @@ export function fibonacciFunction(args: RuntimeVal[], _env: Environment) {
 
     const fib = (n: number) => {
         if (n <= 1) return n;
+
         let a = 0;
         let b = 1;
+
         for (let i = 2; i <= n; i++) {
             const temp = a + b;
+
             a = b;
             b = temp;
         }
+
         return b;
     };
 
@@ -465,6 +476,7 @@ export function meanFunction(args: RuntimeVal[], _env: Environment) {
     const numbers = args.map(arg => arg.value as number);
 
     const result = numbers.reduce((sum, number) => sum + number, 0) / numbers.length;
+
     return MK_NUMBER(result);
 }
 
@@ -530,7 +542,7 @@ export function strEndsWithFunction(args: RuntimeVal[], _env: Environment) {
 
     const str = args[0].value as string;
     const substring = args[1].value as string;
-    
+
     if (str.endsWith(substring)) {
         return MK_BOOL(true);
     } else {
@@ -553,7 +565,7 @@ export function strStartsWithFunction(args: RuntimeVal[], _env: Environment) {
     }
 }
 
-export function strToUppercaseFunction (args: RuntimeVal[], _env: Environment) {
+export function strToUppercaseFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
         throw "strToUppercase function expects exactly one string arguement.";
     }
@@ -563,7 +575,7 @@ export function strToUppercaseFunction (args: RuntimeVal[], _env: Environment) {
     return MK_STRING(str.toUpperCase());
 }
 
-export function strToLowerCaseFunction (args: RuntimeVal[], _env: Environment) {
+export function strToLowerCaseFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
         throw "strToLowerCase function expects exactly one string arguement.";
     }
@@ -584,17 +596,17 @@ export function strReverseFunction(args: RuntimeVal[], _env: Environment) {
     return MK_STRING(reversedStr);
 }
 
-export function strTrimFunction (args: RuntimeVal[], _env: Environment) {
+export function strTrimFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
         throw "strTrim function expects exactly one string arguement.";
     }
 
     const str = args[0].value as string;
-    
+
     return MK_STRING(str.trim());
 }
 
-export function strCharAtFunction (args: RuntimeVal[], _env: Environment) {
+export function strCharAtFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 2) {
         throw "strCharAt function expects exactly two string arguements.";
     }
@@ -605,7 +617,7 @@ export function strCharAtFunction (args: RuntimeVal[], _env: Environment) {
     return MK_STRING(str.charAt(index));
 }
 
-export function strNormalizeFunction (args: RuntimeVal[], _env: Environment) {
+export function strNormalizeFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 2) {
         throw "strNormalize function expects exactly two string arguements.";
     }
@@ -613,7 +625,7 @@ export function strNormalizeFunction (args: RuntimeVal[], _env: Environment) {
     const str = args[0].value as string;
     const mode = args[1].value as string;
 
-    if(mode === undefined) {
+    if (mode === undefined) {
         return MK_STRING(str.normalize(mode));
     }
 
@@ -624,22 +636,57 @@ export function strNormalizeFunction (args: RuntimeVal[], _env: Environment) {
     return MK_STRING(str.normalize(mode));
 }
 
-export function strTrimStartFunction (args: RuntimeVal[], _env: Environment) {
+export function strTrimStartFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
         throw "strTrim function expects exactly one string arguement.";
     }
 
     const str = args[0].value as string;
-    
+
     return MK_STRING(str.trimStart());
 }
 
-export function strTrimEndFunction (args: RuntimeVal[], _env: Environment) {
+export function strTrimEndFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
         throw "strTrim function expects exactly one string arguement.";
     }
 
     const str = args[0].value as string;
-    
+
     return MK_STRING(str.trimEnd());
+}
+
+export function strReplaceFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 3) {
+        throw "strReplace function expects exactly three strings arguments.";
+    }
+
+    const str = args[0].value as string;
+    const toReplace = args[1].value as string;
+    const replaceWith = args[2].value as string;
+
+    return MK_STRING(str.replace(toReplace, replaceWith));
+}
+
+export function strReplaceAllFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 3) {
+        throw "strReplaceAll function expects exactly two strings arguments.";
+    }
+
+    const str = args[0].value as string;
+    const toReplace = args[1].value as string;
+    const replaceWith = args[2].value as string;
+
+    return MK_STRING(str.replaceAll(toReplace, replaceWith));
+}
+
+export function strRepeatFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 2) {
+        throw "strRepeat function expects exactly two strings arguments.";
+    }
+
+    const str = args[0].value as string;
+    const number = args[1].value as number;
+
+    return MK_STRING(str.repeat(number));
 }

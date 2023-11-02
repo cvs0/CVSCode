@@ -41,6 +41,9 @@ import {
     strIncludesFunction,
     strLenFunction,
     strNormalizeFunction,
+    strRepeatFunction,
+    strReplaceAllFunction,
+    strReplaceFunction,
     strReverseFunction,
     strStartsWithFunction,
     strToLowerCaseFunction,
@@ -127,6 +130,9 @@ export function createGlobalEnv() {
     env.declareVar("strNormalize", MK_NATIVE_FN(strNormalizeFunction), true);
     env.declareVar("strTrimStart", MK_NATIVE_FN(strTrimStartFunction), true);
     env.declareVar("strTrimEnd", MK_NATIVE_FN(strTrimEndFunction), true);
+    env.declareVar("strReplace", MK_NATIVE_FN(strReplaceFunction), true);
+    env.declareVar("strReplaceAll", MK_NATIVE_FN(strReplaceAllFunction), true);
+    env.declareVar("strRepeat", MK_NATIVE_FN(strRepeatFunction), true);
 
     return env;
 }
