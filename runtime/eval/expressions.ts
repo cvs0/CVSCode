@@ -24,6 +24,7 @@ import {
 
 export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operator: string): BooleanVal | NumberVal {
     let result: number;
+    
     if (operator == "==") {
         return {
             value: lhs.value == rhs.value,
