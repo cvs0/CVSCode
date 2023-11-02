@@ -35,11 +35,15 @@ CVSCode is a simple scripting language that is built with TypeScript, made by CV
 These features collectively make CVSCode a versatile and powerful programming language for a wide range of applications.
 
 # TODO:
-* loops
+
+- **Loops:** We are actively working on adding support for loops.
 
 # Credits:
-* cvs0
-* tlaceby
+
+This project is made possible by the contributions and efforts of the following individuals:
+
+- **cvs0:** Lead developer and creator of CVSCode.
+- **tlaceby:** Provided lots of assistance in the creation of CVSCode.
 
 # How to use:
 ## How to Launch the REPL (Read-Eval-Print-Loop):
