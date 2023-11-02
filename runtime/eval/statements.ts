@@ -1,7 +1,7 @@
-import { BlockStmt, FunctionDeclaration, IfStmt, Program, Stmt, VarDeclaration } from "../../frontend/ast.ts";
+import { BlockStmt, FunctionDeclaration, IfStmt, Program, VarDeclaration } from "../../frontend/ast.ts";
 import Environment from "../environment.ts";
 import { evaluate } from "../interpreter.ts";
-import { BooleanVal, FunctionValue, MK_BOOL, MK_NULL, NumberVal, ObjectVal, RuntimeVal } from "../values.ts";
+import { BooleanVal, FunctionValue, MK_NULL, NumberVal, ObjectVal, RuntimeVal } from "../values.ts";
 
 export function eval_program(program: Program, env: Environment): RuntimeVal {
     let lastEvaluated: RuntimeVal = MK_NULL();

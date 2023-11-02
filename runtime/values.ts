@@ -1,4 +1,4 @@
-import { Stmt, StringLiteral } from "../frontend/ast.ts";
+import { Stmt } from "../frontend/ast.ts";
 import Environment from "./environment.ts";
 
 // deno-lint-ignore-file no-inferrable-types no-inferrable-types no-inferrable-types
@@ -13,6 +13,7 @@ export type ValueTypes =
 
 export interface RuntimeVal {
     type: ValueTypes;
+    // deno-lint-ignore no-explicit-any
     value?: any;
 }
 
@@ -39,6 +40,7 @@ export interface NumberVal extends RuntimeVal {
     value: number;
 }
 
+// deno-lint-ignore no-inferrable-types
 export function MK_NUMBER (n: number = 0) {
     return { type: "number", value: n} as NumberVal;
 }
