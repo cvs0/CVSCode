@@ -19,7 +19,7 @@ async function run(filename: string) {
 
     const result = evaluate(program, env);
   } catch (error) {
-    console.error(`Error reading or evaluating file: ${error.message}`);
+    console.error(`Error reading or evaluating file: ${error}`);
   }
 }
 

@@ -2,5 +2,5 @@ let x = 25;
 let y = 20;
 
 if (x + y == 45) {
-    print("Result was true.")
+    print(x + y)
 }
