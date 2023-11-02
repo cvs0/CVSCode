@@ -33,23 +33,24 @@ async function repl() {
 
     if (!input || input.includes("exit")) {
       Deno.exit(1);
-    }
+    } else if (input == "help") {
+      console.log("Available Commands:");
+      console.log("  - run <filename.cvs>: Execute a CVSCode script from a file.");
+      console.log("  - version: Display the REPL version.");
+      console.log("  - clear: Clear the screen and reset the REPL.");
 
-    if(input == "version") {
+      continue;
+    } else if(input == "version") {
       console.log("CVSCode Repl " + version);
       console.log("Made by cvs0.");
 
       continue;
-    }
-
-    if(input == "clear") {
+    } else if(input == "clear") {
       console.clear();
       console.log("\nRepl " + version);
 
       continue;
-    }
-
-    if (input.startsWith("run")) {
+    } else if (input.startsWith("run")) {
 
       if(Deno.args.includes("--developer")) {
         console.log("Checking filename.");
