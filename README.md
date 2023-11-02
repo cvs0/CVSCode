@@ -68,3 +68,33 @@ CVSCode is a simple scripting language that is built with TypeScript, made by CV
         print("Result was true.")
     }
     ```
+
+# Known-Issues
+
+* The run file command only works inside VSCode integrated terminal:
+    ```bash
+    run <filename>.cvs
+    ```
+    
+* Some issues with the strict operators inside if statements. (===, !==).
+
+# Legal
+
+## License
+
+This project is licensed under the MIT License.
+
+### MIT License
+
+The MIT License is a permissive open-source license that allows you to freely use, modify, and distribute this project as long as you include the original copyright notice and disclaimers. 
+
+For more details on the MIT License, please refer to the [LICENSE](LICENSE) file in this repository.
+
+## Contributors
+
+We welcome contributions from the community. By contributing to this project, you agree to release your contributions under the terms of the MIT License. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute.
+
+## Disclaimer
+
+This project is provided as-is, and the authors and contributors are not liable for any issues or damages that may arise from its use. For more information, please read our [DISCLAIMER](DISCLAIMER.md) statement.
+
