@@ -95,8 +95,6 @@ This project is made possible by the contributions and efforts of the following 
     run <filename>.cvs
     ```
     
-* Some issues with the strict operators inside if statements. (===, !==).
-
 # Legal
 
 ## License
