@@ -1,4 +1,4 @@
-// deno-lint-ignore-file no-inferrable-types no-unused-vars prefer-const ban-ts-comment
+// deno-lint-ignore-file no-inferrable-types no-unused-vars prefer-const ban-ts-comment ban-unused-ignore
 
 export enum TokenType {
     // Literal Types
@@ -18,8 +18,6 @@ export enum TokenType {
     Equals,             // =
     DoubleEquals,       // ==
     NotEquals,          // !=
-    DoubleEqualsStrict, // !==
-    NotEqualsStrict,    // !==
     Comma,              // ,
     Dot,                // .
     Colon,              // :
@@ -210,11 +208,7 @@ export function tokenize (sourceCode: string): Token[] {
 
         else if (src[0] == '=') {
             if (src[1] == '=') {
-                if(src[2] == "=") {
-                    tokens.push(token(spliceFront(src, 3), TokenType.DoubleEqualsStrict));
-                } else {
-                    tokens.push(token(spliceFront(src, 2), TokenType.DoubleEquals));
-                }
+                tokens.push(token(spliceFront(src, 2), TokenType.DoubleEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.Equals));
             }
@@ -222,11 +216,7 @@ export function tokenize (sourceCode: string): Token[] {
 
         else if (src[0] == "!") {
             if(src[1] == "=") {
-                if(src[2] == "=") {
-                    tokens.push(token(spliceFront(src, 3), TokenType.NotEqualsStrict));
-                } else {
-                    tokens.push(token(spliceFront(src, 2), TokenType.NotEquals));
-                }
+                tokens.push(token(spliceFront(src, 2), TokenType.NotEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.Not));
             }
