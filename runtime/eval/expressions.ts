@@ -26,12 +26,12 @@ export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operato
     let result: number;
     if (operator == "==") {
         return {
-            value: lhs.value === rhs.value,
+            value: lhs.value == rhs.value,
             type: "boolean"
         };
     } else if (operator == "!=") {
         return {
-            value: lhs.value !== rhs.value,
+            value: lhs.value != rhs.value,
             type: "boolean"
         };
     } else if (operator == "<") {
