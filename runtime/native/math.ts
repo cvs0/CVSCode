@@ -1,41 +1,5 @@
-import Environment from "./environment.ts";
-import { MK_BOOL, MK_NULL, MK_NUMBER, MK_STRING, RuntimeVal } from "./values.ts";
-
-export function sqrtFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 1) {
-        throw "sqrt function expects exactly one argument.";
-    }
-
-    const number = args[0].value as number;
-
-    if (isNaN(number)) {
-        throw "Argument must be a valid number.";
-    }
-
-    if (number < 0) {
-        throw "Square root of a negative number is not defined in real numbers.";
-    }
-
-    const result = Math.sqrt(number);
-
-    return MK_NUMBER(result);
-}
-
-export function rndFunction(_args: RuntimeVal[], _env: Environment) {
-    return MK_NUMBER(Math.random());
-}
-
-export function logFunction(args: RuntimeVal[], _env: Environment) {
-    const message = args.map(arg => arg.toString()).join(" ");
-
-    console.log(message);
-
-    return MK_NULL();
-}
-
-export function timeFunction(_args: RuntimeVal[], _env: Environment) {
-    return MK_NUMBER(Date.now());
-}
+import Environment from "../environment.ts";
+import { RuntimeVal,MK_NUMBER,MK_NULL,MK_BOOL } from "../values.ts";
 
 export function powFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 2) {
@@ -387,17 +351,6 @@ export function gcdFunction(args: RuntimeVal[], _env: Environment) {
     return MK_NUMBER(result);
 }
 
-export function printFunction(args: RuntimeVal[], _env: Environment) {
-    console.log(...args);
-    return MK_NULL();
-}
-
-export function printlnFunction(args: RuntimeVal[], _env: Environment) {
-    console.log(...args);
-    console.log(); // Print a newline after the arguments
-    return MK_NULL();
-}
-
 export function factorialFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
         throw "factorial function expects exactly one argument.";
@@ -416,26 +369,6 @@ export function factorialFunction(args: RuntimeVal[], _env: Environment) {
     }
 
     return MK_NUMBER(result);
-}
-
-export function isPrimeFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 1) {
-        throw "isPrime function expects exactly one argument.";
-    }
-
-    const number = args[0].value as number;
-
-    if (!Number.isInteger(number) || number <= 1) {
-        throw "Argument must be a positive integer for prime check.";
-    }
-
-    for (let i = 2; i <= Math.sqrt(number); i++) {
-        if (number % i === 0) {
-            return MK_BOOL(false);
-        }
-    }
-
-    return MK_BOOL(true);
 }
 
 export function fibonacciFunction(args: RuntimeVal[], _env: Environment) {
@@ -499,194 +432,26 @@ export function medianFunction(args: RuntimeVal[], _env: Environment) {
     }
 }
 
-export function isIntFunction(args: RuntimeVal[], _env: Environment) {
+export function rndFunction(_args: RuntimeVal[], _env: Environment) {
+    return MK_NUMBER(Math.random());
+}
+
+export function sqrtFunction(args: RuntimeVal[], _env: Environment) {
     if (args.length !== 1) {
-        throw "isInt function expects exactly one argument.";
+        throw "sqrt function expects exactly one argument.";
     }
 
-    const value = args[0].value;
-    const result = Number.isInteger(value);
-    return MK_BOOL(result);
-}
+    const number = args[0].value as number;
 
-// STRING
-
-export function strLenFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 1) {
-        throw "strLen function expects exactly one string argument.";
+    if (isNaN(number)) {
+        throw "Argument must be a valid number.";
     }
 
-    const str = args[0].value as string;
-    return MK_NUMBER(str.length);
-}
-
-export function strIncludesFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 2) {
-        throw "strIncludes function expects exactly two string arguments.";
+    if (number < 0) {
+        throw "Square root of a negative number is not defined in real numbers.";
     }
 
-    const str = args[0].value as string;
-    const substring = args[1].value as string;
+    const result = Math.sqrt(number);
 
-    if (str.includes(substring)) {
-        return MK_BOOL(true);
-    } else {
-        return MK_BOOL(false);
-    }
-}
-
-export function strEndsWithFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 2) {
-        throw "strEndsWith function expects exactly two string arguements.";
-    }
-
-    const str = args[0].value as string;
-    const substring = args[1].value as string;
-
-    if (str.endsWith(substring)) {
-        return MK_BOOL(true);
-    } else {
-        return MK_BOOL(false);
-    }
-}
-
-export function strStartsWithFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 2) {
-        throw "strStartsWith function expects exactly two string arguements.";
-    }
-
-    const str = args[0].value as string;
-    const substring = args[1].value as string
-
-    if (str.startsWith(substring)) {
-        return MK_BOOL(true);
-    } else {
-        return MK_BOOL(false);
-    }
-}
-
-export function strToUppercaseFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 1) {
-        throw "strToUppercase function expects exactly one string arguement.";
-    }
-
-    const str = args[0].value as string;
-
-    return MK_STRING(str.toUpperCase());
-}
-
-export function strToLowerCaseFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 1) {
-        throw "strToLowerCase function expects exactly one string arguement.";
-    }
-
-    const str = args[0].value as string;
-
-    return MK_STRING(str.toLowerCase());
-}
-
-export function strReverseFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 1) {
-        throw "strReverse function expects exactly one string arguement.";
-    }
-
-    const str = args[0].value as string;
-    const reversedStr = str.split("").reverse().join("");
-
-    return MK_STRING(reversedStr);
-}
-
-export function strTrimFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 1) {
-        throw "strTrim function expects exactly one string arguement.";
-    }
-
-    const str = args[0].value as string;
-
-    return MK_STRING(str.trim());
-}
-
-export function strCharAtFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 2) {
-        throw "strCharAt function expects exactly two string arguements.";
-    }
-
-    const str = args[0].value as string;
-    const index = args[1].value as number;
-
-    return MK_STRING(str.charAt(index));
-}
-
-export function strNormalizeFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 2) {
-        throw "strNormalize function expects exactly two string arguements.";
-    }
-
-    const str = args[0].value as string;
-    const mode = args[1].value as string;
-
-    if (mode === undefined) {
-        return MK_STRING(str.normalize(mode));
-    }
-
-    if (mode !== "NFC" && mode !== "NFD" && mode !== "NFKC" && mode !== "NFKD") {
-        throw "strNormalize mode must be one of the following: 'NFC', 'NFD', 'NFKC', 'NFKD'.";
-    }
-
-    return MK_STRING(str.normalize(mode));
-}
-
-export function strTrimStartFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 1) {
-        throw "strTrim function expects exactly one string arguement.";
-    }
-
-    const str = args[0].value as string;
-
-    return MK_STRING(str.trimStart());
-}
-
-export function strTrimEndFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 1) {
-        throw "strTrim function expects exactly one string arguement.";
-    }
-
-    const str = args[0].value as string;
-
-    return MK_STRING(str.trimEnd());
-}
-
-export function strReplaceFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 3) {
-        throw "strReplace function expects exactly three strings arguments.";
-    }
-
-    const str = args[0].value as string;
-    const toReplace = args[1].value as string;
-    const replaceWith = args[2].value as string;
-
-    return MK_STRING(str.replace(toReplace, replaceWith));
-}
-
-export function strReplaceAllFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 3) {
-        throw "strReplaceAll function expects exactly two strings arguments.";
-    }
-
-    const str = args[0].value as string;
-    const toReplace = args[1].value as string;
-    const replaceWith = args[2].value as string;
-
-    return MK_STRING(str.replaceAll(toReplace, replaceWith));
-}
-
-export function strRepeatFunction(args: RuntimeVal[], _env: Environment) {
-    if (args.length !== 2) {
-        throw "strRepeat function expects exactly two strings arguments.";
-    }
-
-    const str = args[0].value as string;
-    const number = args[1].value as number;
-
-    return MK_STRING(str.repeat(number));
+    return MK_NUMBER(result);
 }
