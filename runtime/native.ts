@@ -17,6 +17,7 @@ export function sqrtFunction(args: RuntimeVal[], _env: Environment) {
     }
 
     const result = Math.sqrt(number);
+
     return MK_NUMBER(result);
 }
 
