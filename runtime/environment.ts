@@ -43,6 +43,7 @@ import {
     strNormalizeFunction,
     strReverseFunction,
     strStartsWithFunction,
+    strToLowerCaseFunction,
     strToUppercaseFunction,
     strTrimEndFunction,
     strTrimFunction,
@@ -57,7 +58,6 @@ import {
     MK_BOOL,
     MK_NATIVE_FN,
     MK_NULL,
-    MK_NUMBER,
     RuntimeVal
 } from "./values.ts";
 
@@ -120,6 +120,7 @@ export function createGlobalEnv() {
     env.declareVar("strEndsWith", MK_NATIVE_FN(strEndsWithFunction), true);
     env.declareVar("strStartsWith", MK_NATIVE_FN(strStartsWithFunction), true);
     env.declareVar("strToUppercase", MK_NATIVE_FN(strToUppercaseFunction), true);
+    env.declareVar("strToLowerCase", MK_NATIVE_FN(strToLowerCaseFunction), true);
     env.declareVar("strReverse", MK_NATIVE_FN(strReverseFunction), true);
     env.declareVar("strTrim", MK_NATIVE_FN(strTrimFunction), true);
     env.declareVar("strCharAt", MK_NATIVE_FN(strCharAtFunction), true);
