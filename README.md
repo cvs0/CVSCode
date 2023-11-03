@@ -64,7 +64,7 @@ This project is made possible by the contributions and efforts of the following 
     deno run -A main.ts
     ```
 
-  * Run your script (while in the REPL interface):
+  * Run your CVSCode script (while in the REPL interface):
     ```shell
     run <filename>.cvs
     ```
