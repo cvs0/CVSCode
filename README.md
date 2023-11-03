@@ -106,6 +106,41 @@ This project is made possible by the contributions and efforts of the following 
 
 * Some operators do not work as of now.
 
+## Pull Request Requirements
+
+### TypeScript and Deno Specific Guidelines
+
+To ensure consistency and maintain the quality of the CVSCode project, we have established the following requirements for pull requests specifically related to TypeScript and Deno:
+
+1. **Code Conformance:**
+   - All TypeScript code must adhere to the [official TypeScript style guide](https://www.typescriptlang.org/tsconfig#tsconfig-json).
+   - Deno-specific TypeScript code should also follow Deno's coding guidelines, which can be found in their official documentation.
+
+2. **Linting:**
+   - Run `deno lint` to check for code quality issues, and ensure there are no linting errors or warnings before submitting your pull request.
+
+3. **Testing:**
+   - All new features and bug fixes must include appropriate test cases to cover the changes.
+   - Run `deno test` to make sure all tests pass successfully.
+
+4. **Documentation:**
+   - If you are introducing new Deno-specific functionality or changes, please update the documentation to reflect these updates.
+
+5. **Dependencies:**
+   - Ensure that any new dependencies are added to the `deps.ts` file, and the imports are properly formatted.
+
+6. **Commit Messages:**
+   - Use meaningful commit messages that succinctly describe the purpose of your changes. For example, "feat: add new Deno module" or "fix: resolve TypeScript compilation error."
+
+7. **Branching Strategy:**
+   - Create a feature branch from the latest `main` branch and give it a descriptive name related to your changes.
+   - When your changes are ready, create a pull request against the `main` branch.
+
+8. **Review and Discussion:**
+   - Be prepared to engage in discussions and address feedback during the pull request review process.
+
+By following these TypeScript and Deno-specific guidelines, you will help us maintain the project's code quality and streamline the contribution process. Thank you for your contributions to CVSCode!
+
 # Legal
 
 ## License
