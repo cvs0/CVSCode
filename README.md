@@ -2,7 +2,7 @@
 
 ![](images/banner.png)
 
-CVSCode is a simple scripting language that is built with TypeScript, made by CVS0. It uses Deno to launch the Repl, from that you can use the CVSCode command line interface to launch / debug your  CVSCode scripts.
+CVSCode is an elegant scripting language crafted with TypeScript, developed by CVS0. It leverages Deno to initiate the REPL (Read-Eval-Print Loop). Through this, you can employ the CVSCode command-line interface to effortlessly launch and debug your CVSCode scripts.
 
 # Features:
 
