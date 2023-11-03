@@ -9,7 +9,7 @@ Welcome to CVSCode! We appreciate your interest in contributing to this project.
 2. Clone your fork to your local machine:
 
    ```bash
-   git clone https://github.com/cvs0/cvscode.git
+   git clone https://github.com/yourname/cvscode.git
    ```
    
 3. Create a new branch for your contribution:
