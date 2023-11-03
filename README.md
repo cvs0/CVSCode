@@ -1,5 +1,3 @@
-Certainly, here's a reorganized version of your CVSCode README:
-
 # CVSCode
 
 ![Banner](images/banner.png)
@@ -58,7 +56,42 @@ if (x == 25) {
 
 For more examples and detailed instructions, please refer to the [Language-basics](#language-basics) section.
 
-## Features
+# Language Basics
+
+CVSCode provides a versatile scripting language with a syntax that is familiar to JavaScript and TypeScript developers. This section covers some fundamental concepts and examples to help you get started with CVSCode.
+
+## Basic Output Program
+
+You can print messages to the console using the `print` function. Here's a simple program that checks a variable and prints a message:
+
+```typescript
+let x = 25;
+
+if (x == 25) {
+    print("X is 25.")
+}
+```
+
+In this example, we declare a variable `x` and use an `if` statement to check if it's equal to 25. If the condition is true, it prints "X is 25."
+
+## Operators
+
+CVSCode supports a range of operators for performing operations on variables. Here's an example of using operators to check the result of an addition:
+
+```typescript
+let x = 25;
+let y = 20;
+
+if (x + y == 45) {
+    print("Result was true.")
+}
+```
+
+In this code, we declare two variables, `x` and `y`, and use the addition operator to calculate their sum. Then, we use an `if` statement to check if the result is equal to 45 and print a message accordingly.
+
+These are just basic examples of CVSCode's functionality. You can explore more advanced features, data structures, and control flow as you delve deeper into your CVSCode scripts.
+
+# Features
 
 CVSCode offers a wide range of features, including:
 
