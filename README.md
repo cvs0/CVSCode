@@ -94,12 +94,18 @@ This project is made possible by the contributions and efforts of the following 
 
 # Known-Issues
 
+## Note: All of this issues are planned to be fixed, this section is for making them public knowledge for contributors and active users.
+
 * The run file command only works inside VSCode integrated terminal:
 
     ```bash
     run <filename>.cvs
     ```
-    
+  
+* Variable names cannot contain integers.
+
+* Some operators do not work as of now.
+
 # Legal
 
 ## License
