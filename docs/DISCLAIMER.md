@@ -1,7 +1,6 @@
 
 **DISCLAIMER.md:**
 
-```markdown
 # CVSCode Disclaimer
 
 This project is provided as-is, without any warranties or guarantees of any kind. The authors and contributors of CVSCode are not liable for any issues, damages, or consequences that may arise from the use of CVSCode.
