@@ -7,6 +7,7 @@ CVSCode is an elegant scripting language crafted with TypeScript, developed by C
 ## Table of Contents
 - [Installation](#installation)
 - [Usage](#usage)
+- [Language Basics](#language-basics)
 - [Features](#features)
 - [TODO](#todo)
 - [Credits](#credits)
