@@ -1,69 +1,4 @@
-import {
-    isPrimeFunction,
-    isIntFunction
-} from "./native/Checks.ts";
 
-import {
-    rndFunction,
-    sqrtFunction,
-    powFunction,
-    roundFunction,
-    absFunction,
-    ceilFunction,
-    floorFunction,
-    minFunction,
-    maxFunction,
-    expFunction,
-    sinFunction,
-    cosFunction,
-    tanFunction,
-    asinFunction,
-    acosFunction,
-    atanFunction,
-    sinhFunction,
-    coshFunction,
-    tanhFunction,
-    expm1Function,
-    log10Function,
-    sqrFunction,
-    cubicFunction,
-    pow10Function,
-    atan2Function,
-    hypotFunction,
-    truncFunction,
-    signFunction,
-    randIntFunction,
-    degToRadFunction,
-    gcdFunction,
-    factorialFunction,
-    fibonacciFunction,
-    meanFunction,
-    medianFunction
-} from "./native/Math.ts";
-
-import {
-    strLenFunction,
-    strIncludesFunction,
-    strEndsWithFunction,
-    strStartsWithFunction,
-    strToUppercaseFunction,
-    strToLowerCaseFunction,
-    strReverseFunction,
-    strTrimFunction,
-    strCharAtFunction,
-    strNormalizeFunction,
-    strTrimStartFunction,
-    strTrimEndFunction,
-    strReplaceFunction,
-    strReplaceAllFunction,
-    strRepeatFunction
-} from "./native/String.ts";
-
-import {
-    printFunction,
-    printlnFunction,
-    timeFunction
-} from "./native/core.ts";
 
 import {
     MK_BOOL,
@@ -71,6 +6,10 @@ import {
     MK_NULL,
     RuntimeVal
 } from "./values.ts";
+import { isIntFunction, isPrimeFunction } from "./native/check.ts";
+import { printFunction,printlnFunction,timeFunction } from "./native/core.ts";
+import { rndFunction,sqrtFunction,powFunction,roundFunction,absFunction,ceilFunction,floorFunction,minFunction,maxFunction,expFunction,sinFunction,cosFunction,tanFunction,asinFunction,acosFunction,atanFunction,sinhFunction,coshFunction,tanhFunction,expm1Function,log10Function,sqrFunction,cubicFunction,pow10Function,atan2Function,hypotFunction,truncFunction,signFunction,randIntFunction,degToRadFunction,gcdFunction,factorialFunction,fibonacciFunction,meanFunction,medianFunction, slopeFunction } from "./native/maths.ts";
+import { strLenFunction,strIncludesFunction,strEndsWithFunction,strStartsWithFunction,strToUppercaseFunction,strToLowerCaseFunction,strReverseFunction,strTrimFunction,strCharAtFunction,strNormalizeFunction,strTrimStartFunction,strTrimEndFunction,strReplaceFunction,strReplaceAllFunction,strRepeatFunction } from "./native/strings.ts";
 
 export function createGlobalEnv() {
     const env = new Environment();
@@ -79,10 +18,14 @@ export function createGlobalEnv() {
     env.declareVar("false", MK_BOOL(false), true);
     env.declareVar("null", MK_NULL(), true);
 
-    // define native built-in functions
+    // core
     env.declareVar("print", MK_NATIVE_FN(printFunction), true);
     env.declareVar("println", MK_NATIVE_FN(printlnFunction), true);
     env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
+
+    // checks
+    env.declareVar("isPrime", MK_NATIVE_FN(isPrimeFunction), true);
+    env.declareVar("isInt", MK_NATIVE_FN(isIntFunction), true);
 
     
     // MATH
@@ -118,11 +61,10 @@ export function createGlobalEnv() {
     env.declareVar("degToRad", MK_NATIVE_FN(degToRadFunction), true);
     env.declareVar("gcd", MK_NATIVE_FN(gcdFunction), true);
     env.declareVar("factorial", MK_NATIVE_FN(factorialFunction), true);
-    env.declareVar("isPrime", MK_NATIVE_FN(isPrimeFunction), true);
     env.declareVar("fibonacci", MK_NATIVE_FN(fibonacciFunction), true);
     env.declareVar("mean", MK_NATIVE_FN(meanFunction), true);
     env.declareVar("median", MK_NATIVE_FN(medianFunction), true);
-    env.declareVar("isInt", MK_NATIVE_FN(isIntFunction), true);
+    env.declareVar("slope", MK_NATIVE_FN(slopeFunction), true);
 
     // STRING
     env.declareVar("strLen", MK_NATIVE_FN(strLenFunction), true);

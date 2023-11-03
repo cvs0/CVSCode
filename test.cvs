@@ -1,6 +1,10 @@
-let x = 25;
+let yy = 25;
 let y = 20;
+let xx = 25;
+let x = 20;
 
-if (x != 25) {
-    print(x + y)
+const check = 25;
+
+if (check == 25) {
+    print(slope(yy, y, xx, x))
 }

@@ -455,3 +455,19 @@ export function sqrtFunction(args: RuntimeVal[], _env: Environment) {
 
     return MK_NUMBER(result);
 }
+
+export function slopeFunction(args: RuntimeVal[], _env: Environment) {
+    if (args.length !== 4) {
+        throw "Slope function expects exactly 4 number arguments.";
+    }
+    
+    const y2 = args[0].value as number;
+    const y1 = args[1].value as number;
+    
+    const x2 = args[2].value as number;
+    const x1 = args[3].value as number;
+
+    const slope = (y2 - y1) / (x2 - x1);
+
+    return MK_NUMBER(slope);
+}
