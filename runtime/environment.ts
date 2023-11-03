@@ -62,8 +62,7 @@ import {
 import {
     printFunction,
     printlnFunction,
-    timeFunction,
-    logFunction
+    timeFunction
 } from "./native/core.ts";
 
 import {
@@ -84,7 +83,6 @@ export function createGlobalEnv() {
     env.declareVar("print", MK_NATIVE_FN(printFunction), true);
     env.declareVar("println", MK_NATIVE_FN(printlnFunction), true);
     env.declareVar("time", MK_NATIVE_FN(timeFunction), true);
-    env.declareVar("log", MK_NATIVE_FN(logFunction), true);
 
     
     // MATH
