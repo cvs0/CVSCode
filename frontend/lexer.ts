@@ -100,11 +100,13 @@ export function tokenize (sourceCode: string): Token[] {
     while (src.length > 0) {
 
         if (src[0] === "/" && src[1] === "/") {
+            // Ignore the errors for no overlaps.
             // @ts-ignore
             while (src.length > 0 && src[0] !== "\n") {
                 src.shift();
             }
-
+            
+            // Ignore the errors for no overlaps.
             // @ts-ignore
             if (src[0] === "\n") {
                 src.shift();
@@ -115,14 +117,20 @@ export function tokenize (sourceCode: string): Token[] {
         else if (src[0] === "/" && src[1] === "*") {
             src.shift();
             src.shift();
+            
+            // Ignore the errors for no overlaps.
             // @ts-ignore
             while (src.length > 0 && !(src[0] === "*" && src[1] === "/")) {
                 src.shift();
+
+                // Ignore the errors for no overlaps.
                 // @ts-ignore
                 if (src[0] === "\n") {
                     line++;
                 }
             }
+
+            // Ignore the errors for no overlaps.
             // @ts-ignore
             if (src[0] === "*" && src[1] === "/") {
                 src.shift();
