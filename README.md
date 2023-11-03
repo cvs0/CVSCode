@@ -92,9 +92,9 @@ This project is made possible by the contributions and efforts of the following 
     }
     ```
 
-# Known-Issues
+# Known Issues
 
-## Note: All of this issues are planned to be fixed, this section is for making them public knowledge for contributors and active users.
+## Note: All of these issues are planned to be fixed. This section is for making them public knowledge for contributors and active users.
 
 * The run file command only works inside VSCode integrated terminal:
 
