@@ -127,7 +127,7 @@ To ensure consistency and maintain the quality of the CVSCode project, we have e
    - If you are introducing new Deno-specific functionality or changes, please update the documentation to reflect these updates.
 
 5. **Dependencies:**
-   - Ensure that any new dependencies are added to the `deps.ts` file, and the imports are properly formatted.
+   - Ensure that new dependencies that you add are clearly stated in your pull request, this includes name and version.
 
 6. **Commit Messages:**
    - Use meaningful commit messages that succinctly describe the purpose of your changes. For example, "feat: add new Deno module" or "fix: resolve TypeScript compilation error."
