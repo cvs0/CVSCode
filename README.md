@@ -146,7 +146,7 @@ To ensure consistency and maintain the quality of the CVSCode project, we have e
 7. **Branching Strategy**
 8. **Review and Discussion**
 
-By following these TypeScript and Deno-specific guidelines, you will help us maintain the project's code quality and streamline the contribution process. Thank you for your contributions to CVSCode!
+By following these TypeScript and Deno-specific guidelines, you will help us maintain the project's code quality and streamline the contribution process. Thank you for your contributions to the CVSCode project!
 
 ## Legal
 
