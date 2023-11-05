@@ -114,7 +114,7 @@ These features collectively make CVSCode a versatile and powerful programming la
 
 ## TODO
 
-We are actively working on adding support for loops.
+We are actively working on adding support for loops, libraries, and more assignment expressions.
 
 ## Credits
 
