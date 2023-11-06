@@ -9,7 +9,7 @@ CVSCode is an elegant scripting language crafted with TypeScript, developed by C
 - [Usage](#usage)
 - [Language Basics](#language-basics)
 - [Features](#features)
-- [TODO](#todo)
+- [Todo](#todo)
 - [Credits](#credits)
 - [Known Issues](#known-issues)
 - [Pull Request Requirements](#pull-request-requirements)
@@ -112,7 +112,7 @@ CVSCode offers a wide range of features, including:
 
 These features collectively make CVSCode a versatile and powerful programming language for a wide range of applications.
 
-## TODO
+## Todo
 
 We are actively working on adding support for loops, libraries, and more assignment expressions.
 
