@@ -107,7 +107,6 @@ CVSCode offers a wide range of features, including:
 - **Function Calls**
 - **Object Member Expressions**
 - **Conditional Statements**
-- **Else Statements**
 - **Comments**
 
 These features collectively make CVSCode a versatile and powerful programming language for a wide range of applications.
