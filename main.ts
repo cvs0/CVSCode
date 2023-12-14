@@ -2,88 +2,82 @@ import Parser from "./frontend/parser.ts";
 import { createGlobalEnv } from "./runtime/environment.ts";
 import { evaluate } from "./runtime/interpreter.ts";
 
-const version = "v0.4";
+const version = "v0.5";
 
 async function run(filename: string) {
   const parser = new Parser();
   const env = createGlobalEnv();
 
   try {
-    if (!filename.toLowerCase().endsWith(".cvs")) {
-      console.error("Invalid file type. You must provide a CVSCode file (.cvs).");
-      return;
-    }
-
     const input = await Deno.readTextFile(filename);
     const program = parser.produceAST(input);
 
-    evaluate(program, env);
+    return evaluate(program, env);
   } catch (error) {
     console.error(`Error reading or evaluating file: ${error}`);
   }
 }
 
-async function repl() {
-  const parser = new Parser();
-  const env = createGlobalEnv();
-  console.log("\nRepl " + version);
+if (Deno.args.includes("--run")) {
+  if (Deno.args.length < 2) {
+    console.error("Usage: deno run -A main.ts --run <filename.cvs>");
+    Deno.exit(1);
+  }
 
-  while (true) {
-    const input = prompt("> ");
+  const filename = Deno.args[1];
+  await run(filename);
+} else {
+  const repl = async () => {
+    const parser = new Parser();
+    const env = createGlobalEnv();
+    console.log("\nRepl " + version);
 
-    if (!input || input.includes("exit")) {
-      Deno.exit(1);
-    } else if (input == "help") {
-      console.log("Available Commands:");
-      console.log("  - run <filename.cvs>: Execute a CVSCode script from a file.");
-      console.log("  - version: Display the REPL version.");
-      console.log("  - clear: Clear the screen and reset the REPL.");
+    while (true) {
+      const input = prompt("> ");
 
-      continue;
-    } else if(input == "version") {
-      console.log("CVSCode Repl " + version);
-      console.log("Made by cvs0.");
+      if (!input || input.includes("exit")) {
+        Deno.exit(1);
+      } else if (input == "help") {
+        console.log("Available Commands:");
+        console.log("  - run <filename.cvs>: Execute a CVSCode script from a file.");
+        console.log("  - version: Display the REPL version.");
+        console.log("  - clear: Clear the screen and reset the REPL.");
 
-      continue;
-    } else if(input == "clear") {
-      console.clear();
-      console.log("\nRepl " + version);
+        continue;
+      } else if(input == "version") {
+        console.log("CVSCode Repl " + version);
+        console.log("Made by cvs0.");
 
-      continue;
-    } else if (input.startsWith("run")) {
+        continue;
+      } else if(input == "clear") {
+        console.clear();
+        console.log("\nRepl " + version);
 
-      if(Deno.args.includes("--developer")) {
-        console.log("Checking filename.");
-      }
-      
-      const fileNameMatch = input.match(/run\s+(\S+)/);
-      if (fileNameMatch) {
+        continue;
+      } else if (input.startsWith("run")) {
+        const fileNameMatch = input.match(/run\s+(\S+)/);
+        if (fileNameMatch) {
+          const fileName = fileNameMatch[1];
 
-        const fileName = fileNameMatch[1];
-
-        if(Deno.args.includes("--developer")) {
           console.log("Running file: " + fileName);
 
-          await run(fileName);
+          const result = await run(fileName);
+          console.log("Result:", result);
 
           console.log("Ran file: " + fileName);
+          continue;
         } else {
-          await run(fileName);
+          console.error("Invalid run command. Use 'run <filename>.cvs'.");
+          continue;
         }
-
-        continue;
-      } else {
-        console.error("Invalid run command. Use 'run <filename>.cvs'.");
-
-        continue;
       }
+
+      const program = parser.produceAST(input);
+      const result = evaluate(program, env);
+
+      console.log(result);
     }
+  };
 
-    const program = parser.produceAST(input);
-    const result = evaluate(program, env);
-
-    console.log(result);
-  }
+  await repl();
 }
-
-await repl();
