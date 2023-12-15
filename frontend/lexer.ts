@@ -222,32 +222,32 @@ export function tokenize (sourceCode: string): Token[] {
             }
         }
 
-        else if (src[0] == "!") {
-            if(src[1] == "=") {
+        else if (src[0] == '!') {
+            if(src[1] == '=') {
                 tokens.push(token(spliceFront(src, 2), TokenType.NotEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.Not));
             }
         }
 
-        else if (src[0] == ">") {
-            if(src[1] == "=") {
+        else if (src[0] == '>') {
+            if(src[1] == '=') {
                 tokens.push(token(spliceFront(src, 2), TokenType.GreaterThanEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.GreaterThan));
             }
         }
 
-        else if (src[0] == "<") {
-            if(src[1] == "=") {
+        else if (src[0] == '<') {
+            if(src[1] == '=') {
                 tokens.push(token(spliceFront(src, 2), TokenType.LessThanEquals));
             } else {
                 tokens.push(token(src.shift(), TokenType.LessThan));
             }
-        }
+        }        
 
-        else if (src[0] == "&") {
-            if(src[1] == "&") {
+        else if (src[0] == '&') {
+            if(src[1] == '&') {
                 tokens.push(token(spliceFront(src, 2), TokenType.And));
             }
         }

@@ -5,6 +5,6 @@ let x = 20;
 
 const check = 25;
 
-if (check == 25) {
+if (check != 23 && check < 200) {
     print(slope(yy, y, xx, x))
 }

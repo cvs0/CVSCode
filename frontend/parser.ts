@@ -56,6 +56,8 @@ export default class Parser {
     public produceAST(sourceCode: string): Program {
         // Tokenize the source code to obtain a list of tokens
         this.tokens = tokenize(sourceCode);
+
+        console.log(this.tokens);
     
         // Create the root of the abstract syntax tree (AST)
         const program: Program = {
@@ -300,22 +302,23 @@ export default class Parser {
     // Parse an assignment expression, which can include assignments like '='.
     private parse_assignment_expr(): Expr {
         // Parse the left side of the assignment expression, which is often an object expression.
-        const left = this.parse_object_expr();
-
-        // Check if there is an assignment operator '=' in the current position.
-        if (this.at().type === TokenType.Equals) {
+        let left = this.parse_object_expr();
+    
+        // Continue parsing if there are consecutive assignment operators.
+        while (this.at().type === TokenType.Equals) {
             this.eat(); // Consume the assignment operator.
-
+    
             // Parse the right side of the assignment expression.
             const value = this.parse_assignment_expr();
-
-            // Return an Assignment Expression node with the left and right sides of the assignment.
-            return { value, assigne: left, kind: "AssignmentExpr" } as AssignmentExpr;
+    
+            // Update 'left' to represent the new Assignment Expression node.
+            left = { value, assigne: left, kind: "AssignmentExpr" } as AssignmentExpr;
         }
-
-        // If no assignment operator is found, return the left side as-is.
+    
+        // Return the resulting expression.
         return left;
     }
+    
 
     
     // Parse an object expression, representing object literals like { key: value, key2: value }
@@ -400,26 +403,29 @@ export default class Parser {
         // Parse the left operand as an additive expression
         let left = this.parse_additive_expr();
     
-        // If the current token is '==', parse multiple comparison expressions
-        if (this.at().value === "==") {
-            while (this.at().value === "==") {
-                // Get the operator
-                const operator = this.eat().value;
-                // Parse the right operand as an additive expression
-                const right = this.parse_additive_expr();
+        // Define the set of comparison operators
+        const comparisonOperators = ["==", "<", ">", "<=", ">=", "!="];
     
-                // Create a Binary Expression node
-                left = {
-                    kind: "BinaryExpr",
-                    left,
-                    right,
-                    operator,
-                } as BinaryExpr;
-            }
+        // If the current token is a comparison or logical operator, parse multiple expressions
+        while (comparisonOperators.includes(this.at().value)) {
+            // Get the operator
+            const operator = this.eat().value;
+    
+            // Parse the right operand as an additive expression
+            const right = this.parse_additive_expr();
+    
+            // Create a Binary Expression node
+            left = {
+                kind: "BinaryExpr",
+                left,
+                right,
+                operator,
+            } as BinaryExpr;
         }
     
         return left;
     }
+    
 
     // Parse a multiplicative expression involving operators: /, *, or %
     private parse_multiplicative_expr(): Expr {
