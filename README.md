@@ -47,7 +47,7 @@ To get started with CVSCode, follow these steps:
 
 CVSCode provides an easy-to-use scripting language for various applications. Here's a basic example:
 
-```typescript
+```cvscode
 let x = 25;
 
 if (x == 25) {
@@ -65,7 +65,7 @@ CVSCode provides a versatile scripting language with a syntax that is familiar t
 
 You can print messages to the console using the `print` function. Here's a simple program that checks a variable and prints a message:
 
-```typescript
+```cvscode
 let x = 25;
 
 if (x == 25) {
@@ -79,7 +79,7 @@ In this example, we declare a variable `x` and use an `if` statement to check if
 
 CVSCode supports a range of operators for performing operations on variables. Here's an example of using operators to check the result of an addition:
 
-```typescript
+```cvscode
 let x = 25;
 let y = 20;
 
