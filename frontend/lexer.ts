@@ -11,8 +11,9 @@ export enum TokenType {
     Const,              // const
     Fn,                 // fn
     If,                 // if
-    While,
+    While,              // for
     Else,               // else
+
 
     // Grouping * Operators
     BinaryOperator,     // +, -, *, /, %, ^
