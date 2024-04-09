@@ -3,7 +3,8 @@ import {
     BinaryExpr,
     CallExpr,
     Identifier,
-    ObjectLiteral
+    ObjectLiteral,
+    WhileStmt
 } from "../../frontend/ast.ts";
 
 import Environment from "../environment.ts";
@@ -21,6 +22,24 @@ import {
     ObjectVal,
     RuntimeVal
 } from "../values.ts";
+
+export function eval_while_stmt(whileStmt: WhileStmt, env: Environment): RuntimeVal {
+    // Evaluate the condition expression
+    const conditionValue = evaluate(whileStmt.condition, env);
+
+    // Check if the condition is true
+    while (conditionValue.value) {
+        // Execute the body of the while loop
+        evaluate(whileStmt.body, env);
+
+        // Re-evaluate the condition expression for the next iteration
+        const nextConditionValue = evaluate(whileStmt.condition, env);
+        conditionValue.value = nextConditionValue.value;
+    }
+
+    // Return null as the result of executing the while loop
+    return { value: null, type: "null" };
+}
 
 export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operator: string): BooleanVal | NumberVal {
     let result: number;

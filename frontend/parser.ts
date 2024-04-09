@@ -16,6 +16,7 @@ import {
     IfStmt,
     BlockStmt,
     StringLiteral,
+    WhileStmt,
 } from "./ast.ts";
 
 
@@ -90,6 +91,25 @@ export default class Parser {
         return program;
     }
 
+    private parse_while_statement(): Stmt {
+        // Consume the 'while' keyword
+        this.expect(TokenType.While, "Error: Missing 'while' keyword at the start of while loop statement.");
+    
+        // Parse the condition expression within the while loop
+        const condition = this.parse_expr();
+    
+        // Parse the body of the while loop (block statement)
+        const body = this.parse_block();
+    
+        // Return a While Statement node with condition and body
+        return {
+            kind: "WhileStmt",
+            condition,
+            body,
+        } as WhileStmt;
+    }
+    
+
     private parse_stmt(): Stmt {
         // Determine the type of statement to parse based on the current token
         
@@ -108,7 +128,10 @@ export default class Parser {
             // Parse an 'if' statement
             case TokenType.If:
                 return this.parse_if_statement();
-    
+            
+            case TokenType.While:
+                return this.parse_while_statement();
+            
             // Parse a block statement enclosed in curly braces
             case TokenType.OpenBrace:
                 return this.parse_block();

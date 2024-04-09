@@ -1,7 +1,7 @@
 import { RuntimeVal, NumberVal } from "./values.ts"
-import { AssignmentExpr, BinaryExpr, BlockStmt, CallExpr, FunctionDeclaration, Identifier, IfStmt, NumericLiteral, ObjectLiteral, Program, Stmt, StringLiteral, VarDeclaration } from "../frontend/ast.ts"
+import { AssignmentExpr, BinaryExpr, BlockStmt, CallExpr, FunctionDeclaration, Identifier, IfStmt, NumericLiteral, ObjectLiteral, Program, Stmt, StringLiteral, VarDeclaration, WhileStmt } from "../frontend/ast.ts"
 import Environment from "./environment.ts";
-import { eval_identifier,eval_binary_expr, eval_assignment, eval_object_expr, eval_call_expr } from "./eval/expressions.ts";
+import { eval_identifier,eval_binary_expr, eval_assignment, eval_object_expr, eval_call_expr, eval_while_stmt } from "./eval/expressions.ts";
 import { eval_block_stmt, eval_function_declaration, eval_if_stmt, eval_program,eval_var_declaration } from "./eval/statements.ts";
 
 export function evaluate (astNode: Stmt, env: Environment): RuntimeVal {
@@ -45,6 +45,9 @@ export function evaluate (astNode: Stmt, env: Environment): RuntimeVal {
         
         case "IfStmt":
             return eval_if_stmt(astNode as IfStmt, env);
+        
+        case "WhileStmt":
+            return eval_while_stmt(astNode as WhileStmt, env);
 
         case "BlockStmt":
             return eval_block_stmt(astNode as BlockStmt, env);

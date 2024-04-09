@@ -5,6 +5,7 @@ export type NodeType =
     | "VarDeclaration"
     | "FunctionDeclaration"
     | "IfStmt"
+    | "WhileStmt"
     | "BlockStmt"
 
     // EXPRESSIONS
@@ -40,6 +41,12 @@ export interface IfStmt extends Stmt {
     condition: Expr;
     consequence: Stmt;
     alternate?: Stmt;
+}
+
+export interface WhileStmt extends Stmt {
+    kind: "WhileStmt";
+    condition: Expr;
+    body: Stmt;
 }
 
 export interface BlockStmt extends Stmt {

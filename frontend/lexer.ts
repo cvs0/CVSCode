@@ -11,6 +11,7 @@ export enum TokenType {
     Const,              // const
     Fn,                 // fn
     If,                 // if
+    While,
     Else,               // else
 
     // Grouping * Operators
@@ -51,6 +52,7 @@ const KEYWORDS: Record<string, TokenType> = {
     fn: TokenType.Fn,
     if: TokenType.If,
     else: TokenType.Else,
+    while: TokenType.While
 }
 
 export interface Token {
