@@ -103,6 +103,7 @@ CVSCode offers a wide range of features, including:
 - **JavaScript/TypeScript-Like Syntax**
 - **Custom User-Defined Functions**
 - **Objects**
+- **While loops**
 - **User-Defined Structures**
 - **Function Calls**
 - **Object Member Expressions**
@@ -113,7 +114,12 @@ These features collectively make CVSCode a versatile and powerful programming la
 
 ## Todo
 
-We are actively working on adding support for loops, libraries, and more assignment expressions.
+We are actively working on adding support libraries and more assignment expressions.
+
+## Roadmap
+
+- ~~While Loops~~
+- For Loops
 
 ## Credits
 
