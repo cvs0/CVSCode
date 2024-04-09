@@ -6,5 +6,9 @@ let x = 20;
 const check = 25;
 
 while(check > 0) {
-    print("Waddup")
+    x = x + 1
+
+    if(check == 25) {
+        print(x)
+    }
 }
