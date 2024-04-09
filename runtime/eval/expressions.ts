@@ -55,11 +55,6 @@ export function eval_numeric_binary_expr(lhs: NumberVal, rhs: NumberVal, operato
             value: lhs.value >= rhs.value,
             type: "boolean"
         };
-    } else if (operator == "&&" || operator == "||") {
-        return {
-            value: operator == "&&" ? (lhs.value && rhs.value) : (lhs.value || rhs.value),
-            type: "number"
-        };
     } else if (operator == "^") {
         result = lhs.value ^ rhs.value;
     } else if (operator == "+") {
