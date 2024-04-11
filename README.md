@@ -73,7 +73,16 @@ if (x == 25) {
 }
 ```
 
-In this example, we declare a variable `x` and use an `if` statement to check if it's equal to 25. If the condition is true, it prints "X is 25."
+## Basic While Loop Program
+
+While loops can be utilized with parameters that evaluate to a boolean value. Below is a straightforward program demonstrating this concept, where a condition is checked within the while loop before printing.
+
+```cvscode
+let x = 25
+
+while (x < 100) {
+    print(x)
+}
 
 ## Operators
 
