@@ -83,6 +83,7 @@ let x = 25
 while (x < 100) {
     print(x)
 }
+```
 
 ## Operators
 
