@@ -1,14 +1,9 @@
-let yy = 25;
-let y = 20;
-let xx = 25;
-let x = 20;
+const x = "Welcome to cvsCode";
 
-const check = 25;
+// this is a command
 
-while(check > 0) {
-    x = x + 1
+/*
+    This is a multi-line comment
+*/
 
-    if(check == 25) {
-        print(x)
-    }
-}
+print(x)

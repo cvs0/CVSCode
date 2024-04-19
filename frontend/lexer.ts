@@ -4,7 +4,7 @@ export enum TokenType {
     // Literal Types
     Number,
     Identifier,
-    String,
+    String,             // ""
 
     // Keywords
     Let,                // let
@@ -48,19 +48,21 @@ export enum TokenType {
 }
 
 const KEYWORDS: Record<string, TokenType> = {
-    let: TokenType.Let,
-    const: TokenType.Const,
-    fn: TokenType.Fn,
-    if: TokenType.If,
-    else: TokenType.Else,
-    while: TokenType.While
+    let: TokenType.Let,            // let
+    const: TokenType.Const,        // const
+    fn: TokenType.Fn,              // fn
+    if: TokenType.If,              // if
+    else: TokenType.Else,          // else
+    while: TokenType.While         // while
 }
 
+// define the token interface, which holds the value and type for the current token.
 export interface Token {
     value: string,
     type: TokenType,
 }
 
+// Parses the token and returns an object containing the value and the type
 function token(value: string = "", type: TokenType): Token {
     if (typeof value !== 'string' || !Object.values(TokenType).includes(type)) {
         throw new Error('Invalid arguments for token function');
@@ -76,6 +78,7 @@ function isAlpha(char: string): boolean {
     return upperCaseChar !== char.toLowerCase();
 }
 
+// Checks for skippable tokens
 function isSkippable(char: string): boolean {
     if (typeof char !== 'string' || char.length !== 1) {
         throw new Error('Invalid argument for isSkippable function');
@@ -83,6 +86,7 @@ function isSkippable(char: string): boolean {
     return char === ' ' || char === '\n' || char === '\t' || char === '\r';
 }
 
+// Checks for integers (1, 2, 3, ...)
 function isInt(char: string): boolean {
     if (typeof char !== 'string' || char.length !== 1) {
         throw new Error('Invalid argument for isInt function');
@@ -92,7 +96,7 @@ function isInt(char: string): boolean {
     return charCode >= bounds[0] && charCode <= bounds[1];
 }
 
-
+// Tokenize the source code and convert it all into tokens
 export function tokenize (sourceCode: string): Token[] {
     const tokens = new Array<Token>();
     const src = sourceCode.split("")
@@ -144,70 +148,98 @@ export function tokenize (sourceCode: string): Token[] {
             }
         }
         
+        // parse the opening paren
         else if(src[0] == '(') {
             tokens.push(token(src.shift(), TokenType.OpenParen));
         }
 
+        // parse the closing paren
         else if (src[0] == ")") {
             tokens.push(token(src.shift(), TokenType.CloseParen));
         }
 
+        // parse the opening brace
         else if (src[0] == "{") {
             tokens.push(token(src.shift(), TokenType.OpenBrace));
         }
 
+        // parse the closing brace
         else if (src[0] == "}") {
             tokens.push(token(src.shift(), TokenType.CloseBrace));
         }
 
+        // parse the opening square bracket
         else if (src[0] == "[") {
             tokens.push(token(src.shift(), TokenType.OpenBracket));
         }
 
+        // parse the closing square bracket
         else if (src[0] == "]") {
             tokens.push(token(src.shift(), TokenType.CloseBracket));
         }
 
+        // parse the XOR operand
         else if (src[0] == "^") {
+            // parse the XOR equals operand
             if (src[1] == "=") {
+                // push the XOR equal operand
                 tokens.push(token(spliceFront(src, 2), TokenType.XorEqual));
             } else {
+                // push the XOR operand as a BinaryOperator
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
             }
         }
 
+        // parse the plus operand
         else if (src[0] == "+") {
+            // parse the increment operand
             if (src[1] == "+") {
+                // push the incremet operand
                 tokens.push(token(spliceFront(src, 2), TokenType.Increment));
             } else if(src[1] == '=') {
+                // push the += operand
                 tokens.push(token(spliceFront(src, 2), TokenType.PlusEquals));
             } else {
+                // push the = as a BinaryOperator
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
             }
         }
 
+        // parse the minus operand
         else if (src[0] == "-") {
+            // parse the decrement operand
             if (src[1] == "-") {
+                // push the decrement operand
                 tokens.push(token(spliceFront(src, 2), TokenType.Decrement));
             } if(src[1] == '=') {
+                // push the -= operand
                 tokens.push(token(spliceFront(src, 2), TokenType.MinusEquals));
             } else {
+                // push the - as a BinaryOperator
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
             }
         }
         
+        // parse the multiplication operand
         else if (src[0] == "*") {
+            // parse the *= operand
             if(src[1] == '=') {
+                // push the *= operand
                 tokens.push(token(spliceFront(src, 2), TokenType.TimesEquals));
             } else {
+                // push the = as a BinaryOperator
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
             }
         }
         
+        // parse the division operand
         else if (src[0] == "/") {
+            // parse the /= operand
             if(src[1] == '=') {
+                // push the /= operand
                 tokens.push(token(spliceFront(src, 2), TokenType.DivideEquals));
             } else {
+                // push the / as a BinaryOperator
                 tokens.push(token(src.shift(), TokenType.BinaryOperator));
             }
         }
@@ -295,7 +327,9 @@ export function tokenize (sourceCode: string): Token[] {
             }
         }
 
+        // parse the ; symbol
         else if (src[0] == ';') {
+            // push the ; symbol
             tokens.push(token(src.shift(), TokenType.Semicolon));
         }
 
@@ -312,8 +346,6 @@ export function tokenize (sourceCode: string): Token[] {
         }
         
         else {
-            // Handles multicharacter tokens
-
             // Build number token
             if(isInt(src[0])) {
                 let num = "";
@@ -355,14 +387,17 @@ export function tokenize (sourceCode: string): Token[] {
         }
     }
 
+    // handle the EOF (end of file)
     tokens.push({
         type: TokenType.EOF,
         value: "EndOfFile"
     });
     
+    // return our parsed tokens array
     return tokens;
 }
 
+// splice the front of a string / number
 function spliceFront(src: string[], n: number): string {
     if (!Array.isArray(src) || typeof n !== 'number' || n < 0) {
         throw new Error('Invalid arguments for spliceFront function');

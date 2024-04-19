@@ -20,15 +20,18 @@ export type NodeType =
     | "Identifier"
     | "StringLiteral";
 
+// define our statement base
 export interface Stmt {
     kind: NodeType;
 }
 
+// define our program base, which consists of an array of statements
 export interface Program extends Stmt {
     kind: "Program",
     body: Stmt[];
 }
 
+// define our variable declaration base, which consists of if its constant (cannot be changed), its identifier, and its optional value. If the value is not passed it becomes null.
 export interface VarDeclaration extends Stmt {
     kind: "VarDeclaration",
     constant: boolean,

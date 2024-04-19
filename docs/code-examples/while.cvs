@@ -1,0 +1,5 @@
+var x = 12
+
+while (x > 11) {
+    print("Condition met")
+}

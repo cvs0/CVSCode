@@ -27,22 +27,28 @@ import {
 } from "./lexer.ts";
 
 export default class Parser {
+    // Declare the tokens array
     private tokens: Token[] = [];
 
+    // returns if we are at the end of the file or not
     private not_eof (): boolean {
         return this.tokens[0].type != TokenType.EOF;
     }
 
+    // returns the current token
     private at () {
         return this.tokens[0] as Token;
     }
 
+    // shifts tokens
     private eat () {
         const prev = this.tokens.shift() as Token;
         
         return prev;
     }
 
+    // Throw errors when expected tokens are not met, some examples include:
+    // When an if statement doesn't have a closing brace
     private expect (type: TokenType, err: any) {
         const prev = this.eat();
 
@@ -54,6 +60,7 @@ export default class Parser {
         return prev;
     }
 
+    // Produces the AST based on the source code
     public produceAST(sourceCode: string): Program {
         // Tokenize the source code to obtain a list of tokens
         this.tokens = tokenize(sourceCode);
@@ -91,6 +98,7 @@ export default class Parser {
         return program;
     }
 
+    // Parses while statements
     private parse_while_statement(): Stmt {
         // Consume the 'while' keyword
         this.expect(TokenType.While, "Error: Missing 'while' keyword at the start of while loop statement.");
@@ -109,10 +117,8 @@ export default class Parser {
         } as WhileStmt;
     }
     
-
-    private parse_stmt(): Stmt {
-        // Determine the type of statement to parse based on the current token
-        
+    // Parses all statements, and finds the type
+    private parse_stmt(): Stmt {        
         // Parse a variable declaration for 'let' and 'const' keywords
         switch (this.at().type) {
             case TokenType.Let:
@@ -149,6 +155,7 @@ export default class Parser {
         }
     }
     
+    // Parses block statements, which would be something inside of like an if block
     parse_block(): Stmt {
         // Expect an opening brace to start a block statement
         this.expect(TokenType.OpenBrace, "Error: Missing Opening Brace '{' for Code Block.");
@@ -172,6 +179,7 @@ export default class Parser {
         } as BlockStmt;
     }
 
+    // Parse if statements and their conditials
     parse_if_statement(): Stmt {
         // Consume the 'if' keyword
         this.eat();
@@ -208,6 +216,7 @@ export default class Parser {
         } as IfStmt;
     }    
 
+    // Parses the function declaration statement
     parse_fn_declaration(): Stmt {
         // Consume the 'fn' keyword
         this.eat();
@@ -422,6 +431,7 @@ export default class Parser {
         return left;
     }
     
+    // Parses comparison expressions, which would be checking for equals, greater than, less than, etc...
     private parse_comparison_expr(): Expr {
         // Parse the left operand as an additive expression
         let left = this.parse_additive_expr();
@@ -585,6 +595,7 @@ export default class Parser {
     // UnaryExpr
     // PrimaryExpr
 
+    // Parses primary expressions
     private parse_primary_expr (): Expr {
         const tk = this.at().type;
 
@@ -607,8 +618,10 @@ export default class Parser {
             case TokenType.OpenParen: {
                 this.eat(); // eat the opening param
 
+                // Parse the current expression inside the parenthesis
                 const value = this.parse_expr();
 
+                // Expect a closing parenthesis for the expression
                 this.expect(TokenType.CloseParen, "Error: Unexpected Token Inside Parenthesized Expression - Missing Closing Parenthesis ')'."); // closing param
 
                 return value

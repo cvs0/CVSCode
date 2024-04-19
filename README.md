@@ -102,6 +102,9 @@ In this code, we declare two variables, `x` and `y`, and use the addition operat
 
 These are just basic examples of CVSCode's functionality. You can explore more advanced features, data structures, and control flow as you delve deeper into your CVSCode scripts.
 
+## Native Functions
+cvsCode has many built-in functions, the list is [here](/docs/natives.md)
+
 # Features
 
 CVSCode offers a wide range of features, including:
@@ -142,9 +145,9 @@ This project is made possible by the contributions and efforts of the following 
 
 Note: All of these issues are planned to be fixed. This section is for making them public knowledge for contributors and active users.
 
-- The `run` file command only works inside the VSCode integrated terminal.
+- ~~The `run` file command only works inside the VSCode integrated terminal.~~
 - Variable names cannot contain integers.
-- Some operators do not work as of now.
+- ~~Some operators do not work as of now.~~
 
 ## Pull Request Requirements
 
@@ -152,14 +155,14 @@ Note: All of these issues are planned to be fixed. This section is for making th
 
 To ensure consistency and maintain the quality of the CVSCode project, we have established the following requirements for pull requests specifically related to TypeScript and Deno:
 
-1. **Code Conformance**
-2. **Linting**
-3. **Testing**
-4. **Documentation**
-5. **Dependencies**
-6. **Commit Messages**
-7. **Branching Strategy**
-8. **Review and Discussion**
+1. **Code Conformance**             | Your code must fit with the style of the rest of our code to create a clean codebase for anyone who wants to commit.
+2. **Linting**                      | Your code must pass all linter tests.
+3. **Testing**                      | Your code must be tested and confirmed that it does indeed do whatever it was intended to do without causing other issues.
+4. **Documentation**                | You must provide at least some documentation for your code, if it is a new feature we will add it to our docs.
+5. **Dependencies**                 | If you add any new dependencies you must state it.
+6. **Commit Messages**              | Make sure to add a meaningful commit message that describes your changes.
+7. **Branching Strategy**           | Make sure to use the correct branch.
+8. **Review and Discussion**        | If you do not respond do reviews / discussions within a week your pull request will be cancelled.
 
 By following these TypeScript and Deno-specific guidelines, you will help us maintain the project's code quality and streamline the contribution process. Thank you for your contributions to the CVSCode project!
 
