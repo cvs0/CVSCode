@@ -3,6 +3,7 @@ import { createGlobalEnv } from "./runtime/environment.ts";
 import { evaluate } from "./runtime/interpreter.ts";
 
 const version = "v0.5";
+let history: { command: string; timestamp: Date }[] = []
 
 async function run(filename: string) {
   const parser = new Parser();
@@ -35,13 +36,19 @@ if (Deno.args.includes("--run")) {
     while (true) {
       const input = prompt("> ");
 
+      if(input) {
+        history.push({ command: input, timestamp: new Date()})
+      }
+
       if (!input || input.includes("exit")) {
         Deno.exit(1);
       } else if (input == "help") {
         console.log("Available Commands:");
-        console.log("  - run <filename.cvs>: Execute a CVSCode script from a file.");
-        console.log("  - version: Display the REPL version.");
-        console.log("  - clear: Clear the screen and reset the REPL.");
+        console.log("  - run <filename.cvs>:         Execute a CVSCode script from a file.");
+        console.log("  - version:                    Display the REPL version.");
+        console.log("  - clear:                      Clear the screen and reset the REPL.");
+        console.log("  - history:                    Displays the command history.");
+        console.log("  - clearhistory:               Clears the command history.");
 
         continue;
       } else if(input == "version") {
@@ -51,9 +58,21 @@ if (Deno.args.includes("--run")) {
         continue;
       } else if(input == "clear") {
         console.clear();
-        console.log("\nRepl " + version);
+        console.log("\nCVSCode Repl " + version);
 
         continue;
+      } else if(input == "history") {
+        console.log("Command History")
+        history.forEach((entry, index) => {
+          console.log(`${index + 1}: [${entry.timestamp.toLocaleString()}] ${entry.command}`)
+        })
+
+        continue
+      } else if(input == "clearhistory") {
+        history = []
+        console.log("Cleared History")
+
+        continue
       } else if (input.startsWith("run")) {
         const fileNameMatch = input.match(/run\s+(\S+)/);
         if (fileNameMatch) {
