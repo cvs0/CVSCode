@@ -1,66 +1,6 @@
 // deno-lint-ignore-file no-inferrable-types no-unused-vars ban-ts-comment ban-unused-ignore
 
-export enum TokenType {
-    // Literal Types
-    Number,
-    Identifier,
-    String,             // ""
-
-    // Keywords
-    Let,                // let
-    Const,              // const
-    Fn,                 // fn
-    If,                 // if
-    While,              // for
-    Else,               // else
-
-
-    // Grouping * Operators
-    BinaryOperator,     // +, -, *, /, %, ^
-    Equals,             // =
-    DoubleEquals,       // ==
-    NotEquals,          // !=
-    Comma,              // ,
-    Dot,                // .
-    Colon,              // :
-    Semicolon,          // ;
-    OpenParen,          // (
-    CloseParen,         // )
-    OpenBrace,          // {
-    CloseBrace,         // }
-    OpenBracket,        // [
-    CloseBracket,       // ]
-    EOF,                // Signified the end of the file
-    LessThan,           // <
-    GreaterThan,        // >
-    LessThanEquals,     // <=
-    GreaterThanEquals,  // >=
-    And,                // &&
-    Or,                 // ||
-    PlusEquals,         // +=
-    MinusEquals,        // -=
-    TimesEquals,        // *=
-    DivideEquals,       // /=
-    Increment,          // ++
-    Decrement,          // --
-    Not,                // !
-    XorEqual,           // ^=
-}
-
-const KEYWORDS: Record<string, TokenType> = {
-    let: TokenType.Let,            // let
-    const: TokenType.Const,        // const
-    fn: TokenType.Fn,              // fn
-    if: TokenType.If,              // if
-    else: TokenType.Else,          // else
-    while: TokenType.While         // while
-}
-
-// define the token interface, which holds the value and type for the current token.
-export interface Token {
-    value: string,
-    type: TokenType,
-}
+import { KEYWORDS, Token, TokenType } from "./tokens.ts";
 
 // Parses the token and returns an object containing the value and the type
 function token(value: string = "", type: TokenType): Token {
@@ -96,8 +36,16 @@ function isInt(char: string): boolean {
     return charCode >= bounds[0] && charCode <= bounds[1];
 }
 
+function pushToken(src: string[], type: TokenType, tokens: Token[], splicefrnt?: boolean): void {
+    if (!splicefrnt) {
+        tokens.push(token(src.shift(), type));
+    } else {
+        tokens.push(token(spliceFront(src, 2), type))
+    }
+}
+
 // Tokenize the source code and convert it all into tokens
-export function tokenize (sourceCode: string): Token[] {
+export function tokenize(sourceCode: string): Token[] {
     const tokens = new Array<Token>();
     const src = sourceCode.split("")
     const lines = sourceCode.split("\n").length;
@@ -112,7 +60,7 @@ export function tokenize (sourceCode: string): Token[] {
             while (src.length > 0 && src[0] !== "\n") {
                 src.shift();
             }
-            
+
             // Ignore the errors for no overlaps.
             // @ts-ignore
             if (src[0] === "\n") {
@@ -124,7 +72,7 @@ export function tokenize (sourceCode: string): Token[] {
         else if (src[0] === "/" && src[1] === "*") {
             src.shift();
             src.shift();
-            
+
             // Ignore the errors for no overlaps.
             // @ts-ignore
             while (src.length > 0 && !(src[0] === "*" && src[1] === "/")) {
@@ -147,35 +95,35 @@ export function tokenize (sourceCode: string): Token[] {
                 Deno.exit(1);
             }
         }
-        
+
         // parse the opening paren
-        else if(src[0] == '(') {
-            tokens.push(token(src.shift(), TokenType.OpenParen));
+        else if (src[0] == '(') {
+            pushToken(src, TokenType.OpenParen, tokens)
         }
 
         // parse the closing paren
         else if (src[0] == ")") {
-            tokens.push(token(src.shift(), TokenType.CloseParen));
+            pushToken(src, TokenType.CloseParen, tokens)
         }
 
         // parse the opening brace
         else if (src[0] == "{") {
-            tokens.push(token(src.shift(), TokenType.OpenBrace));
+            pushToken(src, TokenType.OpenBrace, tokens)
         }
 
         // parse the closing brace
         else if (src[0] == "}") {
-            tokens.push(token(src.shift(), TokenType.CloseBrace));
+            pushToken(src, TokenType.CloseBrace, tokens)
         }
 
         // parse the opening square bracket
         else if (src[0] == "[") {
-            tokens.push(token(src.shift(), TokenType.OpenBracket));
+            pushToken(src, TokenType.OpenBracket, tokens)
         }
 
         // parse the closing square bracket
         else if (src[0] == "]") {
-            tokens.push(token(src.shift(), TokenType.CloseBracket));
+            pushToken(src, TokenType.CloseBracket, tokens)
         }
 
         // parse the XOR operand
@@ -183,10 +131,10 @@ export function tokenize (sourceCode: string): Token[] {
             // parse the XOR equals operand
             if (src[1] == "=") {
                 // push the XOR equal operand
-                tokens.push(token(spliceFront(src, 2), TokenType.XorEqual));
+                pushToken(src, TokenType.XorEqual, tokens, true)
             } else {
                 // push the XOR operand as a BinaryOperator
-                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+                pushToken(src, TokenType.BinaryOperator, tokens)
             }
         }
 
@@ -194,14 +142,14 @@ export function tokenize (sourceCode: string): Token[] {
         else if (src[0] == "+") {
             // parse the increment operand
             if (src[1] == "+") {
-                // push the incremet operand
-                tokens.push(token(spliceFront(src, 2), TokenType.Increment));
-            } else if(src[1] == '=') {
+                // push the increment operand
+                pushToken(src, TokenType.Increment, tokens, true)
+            } else if (src[1] == '=') {
                 // push the += operand
-                tokens.push(token(spliceFront(src, 2), TokenType.PlusEquals));
+                pushToken(src, TokenType.PlusEquals, tokens, true)
             } else {
                 // push the = as a BinaryOperator
-                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+                pushToken(src, TokenType.BinaryOperator, tokens)
             }
         }
 
@@ -210,100 +158,99 @@ export function tokenize (sourceCode: string): Token[] {
             // parse the decrement operand
             if (src[1] == "-") {
                 // push the decrement operand
-                tokens.push(token(spliceFront(src, 2), TokenType.Decrement));
-            } if(src[1] == '=') {
+                pushToken(src, TokenType.Decrement, tokens, true)
+            } if (src[1] == '=') {
                 // push the -= operand
-                tokens.push(token(spliceFront(src, 2), TokenType.MinusEquals));
+                pushToken(src, TokenType.MinusEquals, tokens, true)
             } else {
                 // push the - as a BinaryOperator
-                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+                pushToken(src, TokenType.BinaryOperator, tokens)
             }
         }
-        
+
         // parse the multiplication operand
         else if (src[0] == "*") {
             // parse the *= operand
-            if(src[1] == '=') {
+            if (src[1] == '=') {
                 // push the *= operand
-                tokens.push(token(spliceFront(src, 2), TokenType.TimesEquals));
+                pushToken(src, TokenType.TimesEquals, tokens, true)
             } else {
                 // push the = as a BinaryOperator
-                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+                pushToken(src, TokenType.BinaryOperator, tokens)
             }
         }
-        
+
         // parse the division operand
         else if (src[0] == "/") {
             // parse the /= operand
-            if(src[1] == '=') {
+            if (src[1] == '=') {
                 // push the /= operand
-                tokens.push(token(spliceFront(src, 2), TokenType.DivideEquals));
+                pushToken(src, TokenType.DivideEquals, tokens, true)
             } else {
                 // push the / as a BinaryOperator
-                tokens.push(token(src.shift(), TokenType.BinaryOperator));
+                pushToken(src, TokenType.BinaryOperator, tokens)
             }
         }
-        
+
         else if (src[0] == "%") {
-            tokens.push(token(src.shift(), TokenType.BinaryOperator));
+            pushToken(src, TokenType.BinaryOperator, tokens)
         }
-        
 
         else if (src[0] == '=') {
             if (src[1] == '=') {
-                tokens.push(token(spliceFront(src, 2), TokenType.DoubleEquals));
+                pushToken(src, TokenType.DoubleEquals, tokens, true)
             } else {
-                tokens.push(token(src.shift(), TokenType.Equals));
+                pushToken(src, TokenType.Equals, tokens)
             }
         }
 
         else if (src[0] == '!') {
-            if(src[1] == '=') {
-                tokens.push(token(spliceFront(src, 2), TokenType.NotEquals));
+            if (src[1] == '=') {
+                pushToken(src, TokenType.NotEquals, tokens, true)
             } else {
-                tokens.push(token(src.shift(), TokenType.Not));
+                pushToken(src, TokenType.Not, tokens)
             }
         }
 
         else if (src[0] == '>') {
-            if(src[1] == '=') {
-                tokens.push(token(spliceFront(src, 2), TokenType.GreaterThanEquals));
+            if (src[1] == '=') {
+                pushToken(src, TokenType.GreaterThanEquals, tokens, true)
             } else {
-                tokens.push(token(src.shift(), TokenType.GreaterThan));
+                pushToken(src, TokenType.GreaterThan, tokens)
             }
         }
 
         else if (src[0] == '<') {
-            if(src[1] == '=') {
-                tokens.push(token(spliceFront(src, 2), TokenType.LessThanEquals));
+            if (src[1] == '=') {
+                pushToken(src, TokenType.LessThanEquals, tokens, true)
             } else {
-                tokens.push(token(src.shift(), TokenType.LessThan));
+                pushToken(src, TokenType.LessThan, tokens)
             }
-        }        
+        }
 
         else if (src[0] == '&') {
-            if(src[1] == '&') {
-                tokens.push(token(spliceFront(src, 2), TokenType.And));
+            if (src[1] == '&') {
+                pushToken(src, TokenType.And, tokens, true)
             }
         }
 
         else if (src[0] == "|") {
-            if(src[1] == "|") {
-                tokens.push(token(spliceFront(src, 2), TokenType.Or));
+            if (src[1] == "|") {
+                pushToken(src, TokenType.Or, tokens, true)
             }
         }
-        
+
         else if (src[0] == '"') {
             src.shift();
             let str = "";
-        
+
             while (src.length > 0 && src[0] !== '"') {
                 str += src.shift();
             }
-        
+
             if (src[0] === '"') {
                 src.shift();
-                tokens.push(token(str, TokenType.String));
+                pushToken(src, TokenType.String, tokens)
             } else {
                 console.error("Unterminated string literal");
                 Deno.exit(1);
@@ -313,14 +260,14 @@ export function tokenize (sourceCode: string): Token[] {
         else if (src[0] == "'") {
             src.shift();
             let str = "";
-        
+
             while (src.length > 0 && src[0] !== "'") {
                 str += src.shift();
             }
-        
+
             if (src[0] === "'") {
                 src.shift();
-                tokens.push(token(str, TokenType.String));
+                pushToken(src, TokenType.String, tokens)
             } else {
                 console.error("Unterminated string literal");
                 Deno.exit(1);
@@ -330,24 +277,24 @@ export function tokenize (sourceCode: string): Token[] {
         // parse the ; symbol
         else if (src[0] == ';') {
             // push the ; symbol
-            tokens.push(token(src.shift(), TokenType.Semicolon));
+            pushToken(src, TokenType.Semicolon, tokens)
         }
 
         else if (src[0] == ':') {
-            tokens.push(token(src.shift(), TokenType.Colon));
+            pushToken(src, TokenType.Colon, tokens)
         }
 
         else if (src[0] == ',') {
-            tokens.push(token(src.shift(), TokenType.Comma));
+            pushToken(src, TokenType.Comma, tokens)
         }
 
         else if (src[0] == '.') {
-            tokens.push(token(src.shift(), TokenType.Dot));
+            pushToken(src, TokenType.Dot, tokens)
         }
-        
+
         else {
             // Build number token
-            if(isInt(src[0])) {
+            if (isInt(src[0])) {
                 let num = "";
 
                 while (src.length > 0 && isInt(src[0])) {
@@ -377,12 +324,12 @@ export function tokenize (sourceCode: string): Token[] {
                 src.shift(); // skip current char
             } else {
                 console.error(
-					"Unreconized character found in source: ",
-					src[0].charCodeAt(0),
-					src[0],
-				);
+                    "Unreconized character found in source: ",
+                    src[0].charCodeAt(0),
+                    src[0],
+                );
 
-				Deno.exit(1);
+                Deno.exit(1);
             }
         }
     }
@@ -392,7 +339,7 @@ export function tokenize (sourceCode: string): Token[] {
         type: TokenType.EOF,
         value: "EndOfFile"
     });
-    
+
     // return our parsed tokens array
     return tokens;
 }
