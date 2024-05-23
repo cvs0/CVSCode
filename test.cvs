@@ -1,3 +1,5 @@
-const x = slope(1, 2, 3, 5);
+fn log (str) {
+    print(str)
+}
 
-print(x)
+log(5)

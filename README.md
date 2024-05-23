@@ -134,9 +134,8 @@ We are actively working on adding support libraries and more assignment expressi
 - For Loops
 - Package Manager (In progress)
 - Imports
-- Function parameters
+- ~~Function parameters~~
 - Integers in variable names
-- 
 
 ## Credits
 
