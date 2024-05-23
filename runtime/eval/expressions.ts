@@ -139,21 +139,18 @@ export function eval_assignment(
 }
 
 export function eval_object_expr(
-    obj: ObjectLiteral,
-    env: Environment
+	obj: ObjectLiteral,
+	env: Environment
 ): RuntimeVal {
-    const object = { type: "object", properties: new Map()} as ObjectVal;
+	const object = { type: "object", properties: new Map() } as ObjectVal;
+	for (const { key, value } of obj.properties) {
+		const runtimeVal =
+			value == undefined ? env.lookupVar(key) : evaluate(value, env);
 
-    for (const { key, value } of obj.properties) {
-        
-        const runtimeVal = (value == undefined)
-            ? env.lookupVar(key)
-            : evaluate(value, env);
+		object.properties.set(key, runtimeVal);
+	}
 
-        object.properties.set(key, runtimeVal);
-    }
-
-    return object;
+	return object;
 }
 
 export function eval_call_expr(expr: CallExpr, env: Environment): RuntimeVal {

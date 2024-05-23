@@ -1,5 +1,13 @@
-fn log (str) {
-    print(str)
-}
+let foo = 50 / 2;
 
-log(5)
+const obj = {
+  x: 100,
+  y: 32,
+  foo: foo,
+  complex: {
+    bar: true,
+  },
+};
+
+let f = object.complex.bar;
+foo = obj.foo + 5

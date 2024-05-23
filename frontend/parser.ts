@@ -541,42 +541,44 @@ export default class Parser {
 
     // Parse a member expression, including properties accessed via dot or square bracket notation
     private parse_member_expr(): Expr {
-        // Parse the initial object as a primary expression
-        let object = this.parse_primary_expr();
+		let object = this.parse_primary_expr();
 
-        // Continue parsing member expressions while encountering dot or open bracket
-        while (this.at().type === TokenType.Dot || this.at().type === TokenType.OpenBracket) {
-            const operator = this.eat(); // Consume the dot or open bracket
+		while (
+			this.at().type == TokenType.Dot ||
+			this.at().type == TokenType.OpenBracket
+		) {
+			const operator = this.eat();
+			let property: Expr;
+			let computed: boolean;
 
-            let property: Expr;
-            let computed: boolean;
+			// non-computed values aka obj.expr
+			if (operator.type == TokenType.Dot) {
+				computed = false;
+				// get identifier
+				property = this.parse_primary_expr();
+				if (property.kind != "Identifier") {
+					throw `Cannonot use dot operator without right hand side being a identifier`;
+				}
+			} else {
+				// this allows obj[computedValue]
+				computed = true;
+				property = this.parse_expr();
+				this.expect(
+					TokenType.CloseBracket,
+					"Missing closing bracket in computed value."
+				);
+			}
 
-            if (operator.type === TokenType.Dot) { // Non-computed values (e.g., dot.expr)
-                computed = false;
-                // Parse and get the identifier as the property
-                property = this.parse_primary_expr();
+			object = {
+				kind: "MemberExpr",
+				object,
+				property,
+				computed,
+			} as MemberExpr;
+		}
 
-                // Ensure that the property is an identifier
-                if (property.kind !== "Identifier") {
-                    throw 'Cannot use dot operator without the right-hand side being an identifier.';
-                }
-            } else { // Allows object[computedValue] (square bracket notation)
-                computed = true;
-                property = this.parse_expr(); // Parse the computed property expression
-                this.expect(TokenType.CloseBracket, "Error: Incomplete Computed Value - Missing Closing Bracket ']'.");
-            }
-
-            // Create a Member Expression node representing the property access
-            object = {
-                kind: "MemberExpr",
-                object,
-                property,
-                computed,
-            } as MemberExpr;
-        }
-
-        return object; // Return the resulting member expression
-    }
+		return object;
+	}
 
     // Orders of prescidence
     //
