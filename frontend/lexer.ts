@@ -1,54 +1,12 @@
 // deno-lint-ignore-file no-inferrable-types no-unused-vars ban-ts-comment ban-unused-ignore
 
 import { KEYWORDS, Token, TokenType } from "./tokens.ts";
-
-// Parses the token and returns an object containing the value and the type
-function token(value: string = "", type: TokenType): Token {
-    if (typeof value !== 'string' || !Object.values(TokenType).includes(type)) {
-        throw new Error('Invalid arguments for token function');
-    }
-    return { value, type };
-}
-
-function isAlpha(char: string): boolean {
-    if (typeof char !== 'string' || char.length !== 1) {
-        throw new Error('Invalid argument for isAlpha function');
-    }
-    const upperCaseChar = char.toUpperCase();
-    return upperCaseChar !== char.toLowerCase();
-}
-
-// Checks for skippable tokens
-function isSkippable(char: string): boolean {
-    if (typeof char !== 'string' || char.length !== 1) {
-        throw new Error('Invalid argument for isSkippable function');
-    }
-    return char === ' ' || char === '\n' || char === '\t' || char === '\r';
-}
-
-// Checks for integers (1, 2, 3, ...)
-function isInt(char: string): boolean {
-    if (typeof char !== 'string' || char.length !== 1) {
-        throw new Error('Invalid argument for isInt function');
-    }
-    const charCode = char.charCodeAt(0);
-    const bounds = ['0'.charCodeAt(0), '9'.charCodeAt(0)];
-    return charCode >= bounds[0] && charCode <= bounds[1];
-}
-
-function pushToken(src: string[], type: TokenType, tokens: Token[], splicefrnt?: boolean): void {
-    if (!splicefrnt) {
-        tokens.push(token(src.shift(), type));
-    } else {
-        tokens.push(token(spliceFront(src, 2), type))
-    }
-}
+import { isAlpha, isInt, isSkippable, pushToken, token } from "./utils.ts";
 
 // Tokenize the source code and convert it all into tokens
 export function tokenize(sourceCode: string): Token[] {
     const tokens = new Array<Token>();
     const src = sourceCode.split("")
-    const lines = sourceCode.split("\n").length;
     let line = 1;
 
     // Build each token until end of the file
@@ -73,19 +31,16 @@ export function tokenize(sourceCode: string): Token[] {
             src.shift();
             src.shift();
 
-            // Ignore the errors for no overlaps.
             // @ts-ignore
             while (src.length > 0 && !(src[0] === "*" && src[1] === "/")) {
                 src.shift();
 
-                // Ignore the errors for no overlaps.
                 // @ts-ignore
                 if (src[0] === "\n") {
                     line++;
                 }
             }
 
-            // Ignore the errors for no overlaps.
             // @ts-ignore
             if (src[0] === "*" && src[1] === "/") {
                 src.shift();
@@ -293,8 +248,8 @@ export function tokenize(sourceCode: string): Token[] {
         }
 
         else {
-            // Build number token
             if (isInt(src[0])) {
+                // Build number token
                 let num = "";
 
                 while (src.length > 0 && isInt(src[0])) {
@@ -302,31 +257,27 @@ export function tokenize(sourceCode: string): Token[] {
                 }
 
                 tokens.push(token(num, TokenType.Number));
-
             } else if (isAlpha(src[0])) {
+                // Build identifier token
                 let ident = "";
 
                 while (src.length > 0 && isAlpha(src[0])) {
                     ident += src.shift();
                 }
 
-                // check for reserved keywords
+                // Check for reserved keywords
                 const reserved = KEYWORDS[ident];
+                const type = typeof reserved === "number" ? reserved : TokenType.Identifier;
 
-                if (typeof reserved == "number") {
-                    tokens.push(token(ident, reserved));
-                }
-                else {
-                    tokens.push(token(ident, TokenType.Identifier));
-                }
-            }
-            else if (isSkippable(src[0])) {
-                src.shift(); // skip current char
+                tokens.push(token(ident, type));
+            } else if (isSkippable(src[0])) {
+                src.shift(); // Skip current char
             } else {
+                // Unrecognized character
                 console.error(
-                    "Unreconized character found in source: ",
+                    "Unrecognized character found in source: ",
                     src[0].charCodeAt(0),
-                    src[0],
+                    src[0]
                 );
 
                 Deno.exit(1);
@@ -342,17 +293,4 @@ export function tokenize(sourceCode: string): Token[] {
 
     // return our parsed tokens array
     return tokens;
-}
-
-// splice the front of a string / number
-function spliceFront(src: string[], n: number): string {
-    if (!Array.isArray(src) || typeof n !== 'number' || n < 0) {
-        throw new Error('Invalid arguments for spliceFront function');
-    }
-
-    if (n > src.length) {
-        throw new Error('Value of n exceeds the length of the source array');
-    }
-
-    return src.splice(0, n).join("");
 }

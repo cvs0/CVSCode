@@ -18,13 +18,8 @@ import {
     StringLiteral,
     WhileStmt,
 } from "./ast.ts";
-
-
-import {
-    Token,
-    tokenize,
-    TokenType
-} from "./lexer.ts";
+import { tokenize } from "./lexer.ts";
+import { Token, TokenType } from "./tokens.ts";
 
 export default class Parser {
     // Declare the tokens array
@@ -65,7 +60,7 @@ export default class Parser {
         // Tokenize the source code to obtain a list of tokens
         this.tokens = tokenize(sourceCode);
 
-        console.log(this.tokens);
+        // console.log(this.tokens);
     
         // Create the root of the abstract syntax tree (AST)
         const program: Program = {
