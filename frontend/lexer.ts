@@ -46,8 +46,7 @@ export function tokenize(sourceCode: string): Token[] {
                 src.shift();
                 src.shift();
             } else {
-                console.error("Unterminated multi-line comment");
-                Deno.exit(1);
+                throw new Error("Unterminated multi-line comment");
             }
         }
 
@@ -207,8 +206,7 @@ export function tokenize(sourceCode: string): Token[] {
                 src.shift();
                 pushToken(src, TokenType.String, tokens)
             } else {
-                console.error("Unterminated string literal");
-                Deno.exit(1);
+                throw new Error("Unterminated string literal");
             }
         }
 
@@ -224,8 +222,7 @@ export function tokenize(sourceCode: string): Token[] {
                 src.shift();
                 pushToken(src, TokenType.String, tokens)
             } else {
-                console.error("Unterminated string literal");
-                Deno.exit(1);
+                throw new Error("Unterminated string literal");
             }
         }
 
@@ -274,13 +271,11 @@ export function tokenize(sourceCode: string): Token[] {
                 src.shift(); // Skip current char
             } else {
                 // Unrecognized character
-                console.error(
-                    "Unrecognized character found in source: ",
-                    src[0].charCodeAt(0),
+                throw new Error(
+                    "Unrecognized character found in source: " +
+                    src[0].charCodeAt(0) +
                     src[0]
                 );
-
-                Deno.exit(1);
             }
         }
     }
