@@ -1,42 +1,61 @@
-// deno-lint-ignore-file no-inferrable-types no-unused-vars ban-ts-comment ban-unused-ignore
-
 import { KEYWORDS, Token, TokenType } from "./tokens.ts";
 import { isAlpha, isInt, isSkippable, pushToken, token } from "./utils.ts";
+
+// deno-lint-ignore-file no-inferrable-types no-unused-vars ban-ts-comment ban-unused-ignore
+
 
 // Tokenize the source code and convert it all into tokens
 export function tokenize(sourceCode: string): Token[] {
     const tokens = new Array<Token>();
-    const src = sourceCode.split("")
+    const src = sourceCode.split("");
     let line = 1;
+
+    // Helper function to push a token
+    function pushTokenWithType(src: string[], type: TokenType, tokens: Token[], shift: boolean = false) {
+        pushToken(src, type, tokens, shift);
+    }
+
+    // Helper function to push a token with a value
+    function pushTokenWithValue(src: string[], type: TokenType, value: string, tokens: Token[], shift: boolean = false) {
+        tokens.push(token(value, type));
+        if (shift) {
+            src.shift();
+        }
+    }
+
+    // Helper function to parse a multi-character operator
+    function parseOperator(src: string[], operator: string, type: TokenType, tokens: Token[], shift: boolean = false) {
+        if (src[1] === "=") {
+            pushTokenWithValue(src, type, operator + "=", tokens, true);
+        } else {
+            pushTokenWithType(src, type, tokens);
+        }
+    }
 
     // Build each token until end of the file
     while (src.length > 0) {
-
         if (src[0] === "/" && src[1] === "/") {
-            // Ignore the errors for no overlaps.
             // @ts-ignore
             while (src.length > 0 && src[0] !== "\n") {
                 src.shift();
             }
 
-            // Ignore the errors for no overlaps.
             // @ts-ignore
             if (src[0] === "\n") {
                 src.shift();
                 line++;
             }
-        }
-
-        else if (src[0] === "/" && src[1] === "*") {
+        } else if (src[0] === "/" && src[1] === "*") {
+            // Ignore multi-line comments
             src.shift();
             src.shift();
 
             // @ts-ignore
-            while (src.length > 0 && !(src[0] === "*" && src[1] === "/")) {
+            while (src.length > 0 && (src[0] !== "*" || src[1] !== "/")) {
                 src.shift();
 
                 // @ts-ignore
-                if (src[0] === "\n") {
+                if (src[0] === '\n') {
                     line++;
                 }
             }
@@ -48,153 +67,83 @@ export function tokenize(sourceCode: string): Token[] {
             } else {
                 throw new Error("Unterminated multi-line comment");
             }
-        }
-
-        // parse the opening paren
-        else if (src[0] == '(') {
-            pushToken(src, TokenType.OpenParen, tokens)
-        }
-
-        // parse the closing paren
-        else if (src[0] == ")") {
-            pushToken(src, TokenType.CloseParen, tokens)
-        }
-
-        // parse the opening brace
-        else if (src[0] == "{") {
-            pushToken(src, TokenType.OpenBrace, tokens)
-        }
-
-        // parse the closing brace
-        else if (src[0] == "}") {
-            pushToken(src, TokenType.CloseBrace, tokens)
-        }
-
-        // parse the opening square bracket
-        else if (src[0] == "[") {
-            pushToken(src, TokenType.OpenBracket, tokens)
-        }
-
-        // parse the closing square bracket
-        else if (src[0] == "]") {
-            pushToken(src, TokenType.CloseBracket, tokens)
-        }
-
-        // parse the XOR operand
-        else if (src[0] == "^") {
-            // parse the XOR equals operand
-            if (src[1] == "=") {
-                // push the XOR equal operand
-                pushToken(src, TokenType.XorEqual, tokens, true)
+        } else if (src[0] === "(") {
+            pushTokenWithType(src, TokenType.OpenParen, tokens);
+        } else if (src[0] === ")") {
+            pushTokenWithType(src, TokenType.CloseParen, tokens);
+        } else if (src[0] === "{") {
+            pushTokenWithType(src, TokenType.OpenBrace, tokens);
+        } else if (src[0] === "}") {
+            pushTokenWithType(src, TokenType.CloseBrace, tokens);
+        } else if (src[0] === "[") {
+            pushTokenWithType(src, TokenType.OpenBracket, tokens);
+        } else if (src[0] === "]") {
+            pushTokenWithType(src, TokenType.CloseBracket, tokens);
+        } else if (src[0] === "^") {
+            parseOperator(src, "^", TokenType.XorEqual, tokens, true);
+        } else if (src[0] === "+") {
+            if (src[1] === "+") {
+                parseOperator(src, "++", TokenType.Increment, tokens, true);
+            } else if (src[1] === "=") {
+                parseOperator(src, "+", TokenType.PlusEquals, tokens, true);
             } else {
-                // push the XOR operand as a BinaryOperator
-                pushToken(src, TokenType.BinaryOperator, tokens)
+                pushTokenWithType(src, TokenType.BinaryOperator, tokens);
             }
-        }
-
-        // parse the plus operand
-        else if (src[0] == "+") {
-            // parse the increment operand
-            if (src[1] == "+") {
-                // push the increment operand
-                pushToken(src, TokenType.Increment, tokens, true)
-            } else if (src[1] == '=') {
-                // push the += operand
-                pushToken(src, TokenType.PlusEquals, tokens, true)
+        } else if (src[0] === "-") {
+            if (src[1] === "-") {
+                parseOperator(src, "--", TokenType.Decrement, tokens, true);
+            } else if (src[1] === "=") {
+                parseOperator(src, "-", TokenType.MinusEquals, tokens, true);
             } else {
-                // push the = as a BinaryOperator
-                pushToken(src, TokenType.BinaryOperator, tokens)
+                pushTokenWithType(src, TokenType.BinaryOperator, tokens);
             }
-        }
-
-        // parse the minus operand
-        else if (src[0] == "-") {
-            // parse the decrement operand
-            if (src[1] == "-") {
-                // push the decrement operand
-                pushToken(src, TokenType.Decrement, tokens, true)
-            } if (src[1] == '=') {
-                // push the -= operand
-                pushToken(src, TokenType.MinusEquals, tokens, true)
+        } else if (src[0] === "*") {
+            if (src[1] === "=") {
+                parseOperator(src, "*", TokenType.TimesEquals, tokens, true);
             } else {
-                // push the - as a BinaryOperator
-                pushToken(src, TokenType.BinaryOperator, tokens)
+                pushTokenWithType(src, TokenType.BinaryOperator, tokens);
             }
-        }
-
-        // parse the multiplication operand
-        else if (src[0] == "*") {
-            // parse the *= operand
-            if (src[1] == '=') {
-                // push the *= operand
-                pushToken(src, TokenType.TimesEquals, tokens, true)
+        } else if (src[0] === "/") {
+            if (src[1] === "=") {
+                parseOperator(src, "/", TokenType.DivideEquals, tokens, true);
             } else {
-                // push the = as a BinaryOperator
-                pushToken(src, TokenType.BinaryOperator, tokens)
+                pushTokenWithType(src, TokenType.BinaryOperator, tokens);
             }
-        }
-
-        // parse the division operand
-        else if (src[0] == "/") {
-            // parse the /= operand
-            if (src[1] == '=') {
-                // push the /= operand
-                pushToken(src, TokenType.DivideEquals, tokens, true)
+        } else if (src[0] === "%") {
+            pushTokenWithType(src, TokenType.BinaryOperator, tokens);
+        } else if (src[0] === "=") {
+            if (src[1] === "=") {
+                pushTokenWithValue(src, TokenType.DoubleEquals, "==", tokens, true);
             } else {
-                // push the / as a BinaryOperator
-                pushToken(src, TokenType.BinaryOperator, tokens)
+                pushTokenWithType(src, TokenType.Equals, tokens);
             }
-        }
-
-        else if (src[0] == "%") {
-            pushToken(src, TokenType.BinaryOperator, tokens)
-        }
-
-        else if (src[0] == '=') {
-            if (src[1] == '=') {
-                pushToken(src, TokenType.DoubleEquals, tokens, true)
+        } else if (src[0] === "!") {
+            if (src[1] === "=") {
+                pushTokenWithValue(src, TokenType.NotEquals, "!=", tokens, true);
             } else {
-                pushToken(src, TokenType.Equals, tokens)
+                pushTokenWithType(src, TokenType.Not, tokens);
             }
-        }
-
-        else if (src[0] == '!') {
-            if (src[1] == '=') {
-                pushToken(src, TokenType.NotEquals, tokens, true)
+        } else if (src[0] === ">") {
+            if (src[1] === "=") {
+                pushTokenWithValue(src, TokenType.GreaterThanEquals, ">=", tokens, true);
             } else {
-                pushToken(src, TokenType.Not, tokens)
+                pushTokenWithType(src, TokenType.GreaterThan, tokens);
             }
-        }
-
-        else if (src[0] == '>') {
-            if (src[1] == '=') {
-                pushToken(src, TokenType.GreaterThanEquals, tokens, true)
+        } else if (src[0] === "<") {
+            if (src[1] === "=") {
+                pushTokenWithValue(src, TokenType.LessThanEquals, "<=", tokens, true);
             } else {
-                pushToken(src, TokenType.GreaterThan, tokens)
+                pushTokenWithType(src, TokenType.LessThan, tokens);
             }
-        }
-
-        else if (src[0] == '<') {
-            if (src[1] == '=') {
-                pushToken(src, TokenType.LessThanEquals, tokens, true)
-            } else {
-                pushToken(src, TokenType.LessThan, tokens)
+        } else if (src[0] === "&") {
+            if (src[1] === "&") {
+                pushTokenWithValue(src, TokenType.And, "&&", tokens, true);
             }
-        }
-
-        else if (src[0] == '&') {
-            if (src[1] == '&') {
-                pushToken(src, TokenType.And, tokens, true)
+        } else if (src[0] === "|") {
+            if (src[1] === "|") {
+                pushTokenWithValue(src, TokenType.Or, "||", tokens, true);
             }
-        }
-
-        else if (src[0] == "|") {
-            if (src[1] == "|") {
-                pushToken(src, TokenType.Or, tokens, true)
-            }
-        }
-
-        else if (src[0] == '"') {
+        } else if (src[0] === '"') {
             src.shift();
             let str = "";
 
@@ -204,13 +153,11 @@ export function tokenize(sourceCode: string): Token[] {
 
             if (src[0] === '"') {
                 src.shift();
-                pushToken(src, TokenType.String, tokens)
+                pushTokenWithType(src, TokenType.String, tokens);
             } else {
                 throw new Error("Unterminated string literal");
             }
-        }
-
-        else if (src[0] == "'") {
+        } else if (src[0] === "'") {
             src.shift();
             let str = "";
 
@@ -220,31 +167,19 @@ export function tokenize(sourceCode: string): Token[] {
 
             if (src[0] === "'") {
                 src.shift();
-                pushToken(src, TokenType.String, tokens)
+                pushTokenWithType(src, TokenType.String, tokens);
             } else {
                 throw new Error("Unterminated string literal");
             }
-        }
-
-        // parse the ; symbol
-        else if (src[0] == ';') {
-            // push the ; symbol
-            pushToken(src, TokenType.Semicolon, tokens)
-        }
-
-        else if (src[0] == ':') {
-            pushToken(src, TokenType.Colon, tokens)
-        }
-
-        else if (src[0] == ',') {
-            pushToken(src, TokenType.Comma, tokens)
-        }
-
-        else if (src[0] == '.') {
-            pushToken(src, TokenType.Dot, tokens)
-        }
-
-        else {
+        } else if (src[0] === ";") {
+            pushTokenWithType(src, TokenType.Semicolon, tokens);
+        } else if (src[0] === ":") {
+            pushTokenWithType(src, TokenType.Colon, tokens);
+        } else if (src[0] === ",") {
+            pushTokenWithType(src, TokenType.Comma, tokens);
+        } else if (src[0] === ".") {
+            pushTokenWithType(src, TokenType.Dot, tokens);
+        } else {
             if (isInt(src[0])) {
                 // Build number token
                 let num = "";
