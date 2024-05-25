@@ -1,8 +1,11 @@
 // deno-lint-ignore-file no-explicit-any
+
+import { tokenize } from "./lexer.ts";
+import { Token, TokenType } from "./tokens.ts";
 import {
     Stmt,
     Program,
-    Expr, 
+    Expr,
     BinaryExpr,
     NumericLiteral,
     Identifier,
@@ -18,36 +21,33 @@ import {
     StringLiteral,
     WhileStmt,
 } from "./ast.ts";
-import { tokenize } from "./lexer.ts";
-import { Token, TokenType } from "./tokens.ts";
 
 export default class Parser {
     // Declare the tokens array
     private tokens: Token[] = [];
 
     // returns if we are at the end of the file or not
-    private not_eof (): boolean {
+    private not_eof(): boolean {
         return this.tokens[0].type != TokenType.EOF;
     }
 
     // returns the current token
-    private at () {
+    private at() {
         return this.tokens[0] as Token;
     }
 
     // shifts tokens
-    private eat () {
+    private eat() {
         const prev = this.tokens.shift() as Token;
-        
+
         return prev;
     }
 
-    // Throw errors when expected tokens are not met, some examples include:
-    // When an if statement doesn't have a closing brace
-    private expect (type: TokenType, err: any) {
+    // Throw errors when expected tokens are not met
+    private expect(type: TokenType, err: any) {
         const prev = this.eat();
 
-        if(!prev || prev.type != type) {
+        if (!prev || prev.type != type) {
             console.error("Parser Error:\n", err, prev, " - Expecting: ", type)
             Deno.exit(1);
         }
@@ -61,19 +61,19 @@ export default class Parser {
         this.tokens = tokenize(sourceCode);
 
         // console.log(this.tokens);
-    
+
         // Create the root of the abstract syntax tree (AST)
         const program: Program = {
             kind: "Program",
             body: [],
         };
-    
+
         try {
             // Iterate through tokens and parse statements until the end of the file
             while (this.not_eof()) {
                 // Attempt to parse a statement
                 const statement = this.parse_stmt();
-    
+
                 if (statement) {
                     // If parsing was successful, add the statement to the program body
                     program.body.push(statement);
@@ -88,7 +88,7 @@ export default class Parser {
             // Re-throw a custom error to propagate it further, if needed
             throw new Error("Parsing failed", error);
         }
-    
+
         // Return the completed AST
         return program;
     }
@@ -97,13 +97,13 @@ export default class Parser {
     private parse_while_statement(): Stmt {
         // Consume the 'while' keyword
         this.expect(TokenType.While, "Error: Missing 'while' keyword at the start of while loop statement.");
-    
+
         // Parse the condition expression within the while loop
         const condition = this.parse_expr();
-    
+
         // Parse the body of the while loop (block statement)
         const body = this.parse_block();
-    
+
         // Return a While Statement node with condition and body
         return {
             kind: "WhileStmt",
@@ -111,62 +111,62 @@ export default class Parser {
             body,
         } as WhileStmt;
     }
-    
+
     // Parses all statements, and finds the type
-    private parse_stmt(): Stmt {        
+    private parse_stmt(): Stmt {
         // Parse a variable declaration for 'let' and 'const' keywords
         switch (this.at().type) {
             case TokenType.Let:
                 return this.parse_var_declaration();
-                
+
             case TokenType.Const:
                 return this.parse_var_declaration();
-        
+
             // Parse a function declaration for the 'fn' keyword
             case TokenType.Fn:
                 return this.parse_fn_declaration();
-    
+
             // Parse an 'if' statement
             case TokenType.If:
                 return this.parse_if_statement();
-            
+
             case TokenType.While:
                 return this.parse_while_statement();
-            
+
             // Parse a block statement enclosed in curly braces
             case TokenType.OpenBrace:
                 return this.parse_block();
-            
+
             // Parse a string literal
             case TokenType.String:
                 return {
                     kind: "StringLiteral",
                     value: this.eat().value,
                 } as StringLiteral;
-    
+
             // If none of the above, assume it's an expression
             default:
                 return this.parse_expr();
         }
     }
-    
+
     // Parses block statements, which would be something inside of like an if block
     parse_block(): Stmt {
         // Expect an opening brace to start a block statement
         this.expect(TokenType.OpenBrace, "Error: Missing Opening Brace '{' for Code Block.");
-    
+
         // Initialize an array to store statements within the block
         const body = new Array<Stmt>();
-    
+
         // Continue parsing statements until a closing brace is encountered or the end of the input
         while (this.at().type !== TokenType.CloseBrace && this.not_eof()) {
             // Parse each statement within the block
             body.push(this.parse_stmt());
         }
-    
+
         // Expect a closing brace to end the block statement
         this.expect(TokenType.CloseBrace, "Error: Missing Closing Brace '}' for Code Block.");
-    
+
         // Return a Block Statement containing the parsed statements
         return {
             kind: "BlockStmt",
@@ -178,22 +178,22 @@ export default class Parser {
     parse_if_statement(): Stmt {
         // Consume the 'if' keyword
         this.eat();
-        
+
         // Expect an opening parenthesis after the 'if' statement
         this.expect(TokenType.OpenParen, "Error: Missing Opening Parenthesis '(' After 'if' Statement.");
-    
+
         // Parse the condition expression within the if statement
         const condition = this.parse_expr();
-    
+
         // Initialize 'alternate' as undefined; it's optional
         let alternate: Stmt | undefined;
-    
+
         // Expect a closing parenthesis after the condition expression
         this.expect(TokenType.CloseParen, "Error: Missing Closing Parenthesis ')' After 'if' Statement Condition.");
-    
+
         // Parse the consequence (true-branch) of the if statement
         const consequence = this.parse_stmt();
-    
+
         // Check if there is an 'else' clause
         if (this.at().type === TokenType.Else) {
             // Consume the 'else' keyword
@@ -201,7 +201,7 @@ export default class Parser {
             // Parse the alternate (false-branch) of the if statement
             alternate = this.parse_stmt();
         }
-        
+
         // Return an If Statement node with condition, consequence, and alternate
         return {
             kind: "IfStmt",
@@ -209,23 +209,23 @@ export default class Parser {
             alternate,
             consequence,
         } as IfStmt;
-    }    
+    }
 
     // Parses the function declaration statement
     parse_fn_declaration(): Stmt {
         // Consume the 'fn' keyword
         this.eat();
-    
+
         // Expect and extract the function name
         const name = this.expect(
             TokenType.Identifier,
             "Error: Missing Function Name After 'fn' Keyword."
         ).value;
-    
+
         // Parse function arguments and store them in 'args'
         const args = this.parse_args();
         const params: string[] = [];
-    
+
         // Extract argument names from 'args' and check if they are of type 'Identifier'
         for (const arg of args) {
             if (arg.kind !== "Identifier") {
@@ -233,19 +233,19 @@ export default class Parser {
                 console.log(arg);
                 throw "Inside function declaration, expected parameters to be of type string.";
             }
-    
+
             params.push((arg as Identifier).symbol);
         }
-    
+
         // Expect an opening brace to start the function body
         this.expect(
             TokenType.OpenBrace,
             "Error: Incomplete Function Declaration - Missing Function Body."
         );
-    
+
         // Initialize an array to store statements within the function body
         const body: Stmt[] = [];
-    
+
         // Continue parsing statements until the end of the file or a closing brace is encountered
         while (
             this.at().type !== TokenType.EOF &&
@@ -253,13 +253,13 @@ export default class Parser {
         ) {
             body.push(this.parse_stmt());
         }
-    
+
         // Expect a closing brace to end the function declaration
         this.expect(
             TokenType.CloseBrace,
             "Error: Incomplete Function Declaration - Missing Closing Brace '}'."
         );
-    
+
         // Create a Function Declaration node with the parsed information
         const fn = {
             body,
@@ -267,10 +267,10 @@ export default class Parser {
             parameters: params,
             kind: "FunctionDeclaration",
         } as FunctionDeclaration;
-    
+
         return fn;
     }
-    
+
     // Parse a variable declaration statement.
     parse_var_declaration(): Stmt {
         // Check if the declaration is for a constant variable (const) or a regular variable (let).
@@ -330,24 +330,24 @@ export default class Parser {
     private parse_assignment_expr(): Expr {
         // Parse the left side of the assignment expression, which is often an object expression.
         let left = this.parse_object_expr();
-    
+
         // Continue parsing if there are consecutive assignment operators.
         while (this.at().type === TokenType.Equals) {
             this.eat(); // Consume the assignment operator.
-    
+
             // Parse the right side of the assignment expression.
             const value = this.parse_assignment_expr();
-    
+
             // Update 'left' to represent the new Assignment Expression node.
             left = { value, assigne: left, kind: "AssignmentExpr" } as AssignmentExpr;
         }
-    
+
         // Return the resulting expression.
         return left;
     }
-    
 
-    
+
+
     // Parse an object expression, representing object literals like { key: value, key2: value }
     private parse_object_expr(): Expr {
         // If the current token is not an opening brace, it's not an object literal; parse a comparison expression instead.
@@ -383,7 +383,7 @@ export default class Parser {
                 TokenType.Colon,
                 "Error: Incomplete Object Literal - Missing Colon ':' After Key."
             );
-            
+
             // Parse the value associated with the key in the object literal.
             const value = this.parse_expr();
 
@@ -406,14 +406,14 @@ export default class Parser {
     private parse_additive_expr(): Expr {
         // Parse the left operand as a multiplicative expression
         let left = this.parse_multiplicative_expr();
-    
+
         // While the current token is '+' or '-', continue parsing binary expressions
         while (this.at().value === "+" || this.at().value === "-") {
             // Get the operator
             const operator = this.eat().value;
             // Parse the right operand as a multiplicative expression
             const right = this.parse_multiplicative_expr();
-    
+
             // Create a Binary Expression node
             left = {
                 kind: "BinaryExpr",
@@ -422,26 +422,26 @@ export default class Parser {
                 operator,
             } as BinaryExpr;
         }
-    
+
         return left;
     }
-    
+
     // Parses comparison expressions, which would be checking for equals, greater than, less than, etc...
     private parse_comparison_expr(): Expr {
         // Parse the left operand as an additive expression
         let left = this.parse_additive_expr();
-    
+
         // Define the set of comparison operators
         const comparisonOperators = ["==", "<", ">", "<=", ">=", "!="];
-    
+
         // If the current token is a comparison or logical operator, parse multiple expressions
         while (comparisonOperators.includes(this.at().value)) {
             // Get the operator
             const operator = this.eat().value;
-    
+
             // Parse the right operand as an additive expression
             const right = this.parse_additive_expr();
-    
+
             // Create a Binary Expression node
             left = {
                 kind: "BinaryExpr",
@@ -450,10 +450,10 @@ export default class Parser {
                 operator,
             } as BinaryExpr;
         }
-    
+
         return left;
     }
-    
+
 
     // Parse a multiplicative expression involving operators: /, *, or %
     private parse_multiplicative_expr(): Expr {
@@ -541,44 +541,44 @@ export default class Parser {
 
     // Parse a member expression, including properties accessed via dot or square bracket notation
     private parse_member_expr(): Expr {
-		let object = this.parse_primary_expr();
+        let object = this.parse_primary_expr();
 
-		while (
-			this.at().type == TokenType.Dot ||
-			this.at().type == TokenType.OpenBracket
-		) {
-			const operator = this.eat();
-			let property: Expr;
-			let computed: boolean;
+        while (
+            this.at().type == TokenType.Dot ||
+            this.at().type == TokenType.OpenBracket
+        ) {
+            const operator = this.eat();
+            let property: Expr;
+            let computed: boolean;
 
-			// non-computed values aka obj.expr
-			if (operator.type == TokenType.Dot) {
-				computed = false;
-				// get identifier
-				property = this.parse_primary_expr();
-				if (property.kind != "Identifier") {
-					throw `Cannonot use dot operator without right hand side being a identifier`;
-				}
-			} else {
-				// this allows obj[computedValue]
-				computed = true;
-				property = this.parse_expr();
-				this.expect(
-					TokenType.CloseBracket,
-					"Missing closing bracket in computed value."
-				);
-			}
+            // non-computed values aka obj.expr
+            if (operator.type == TokenType.Dot) {
+                computed = false;
+                // get identifier
+                property = this.parse_primary_expr();
+                if (property.kind != "Identifier") {
+                    throw `Cannonot use dot operator without right hand side being a identifier`;
+                }
+            } else {
+                // this allows obj[computedValue]
+                computed = true;
+                property = this.parse_expr();
+                this.expect(
+                    TokenType.CloseBracket,
+                    "Missing closing bracket in computed value."
+                );
+            }
 
-			object = {
-				kind: "MemberExpr",
-				object,
-				property,
-				computed,
-			} as MemberExpr;
-		}
+            object = {
+                kind: "MemberExpr",
+                object,
+                property,
+                computed,
+            } as MemberExpr;
+        }
 
-		return object;
-	}
+        return object;
+    }
 
     // Orders of prescidence
     //
@@ -593,7 +593,7 @@ export default class Parser {
     // PrimaryExpr
 
     // Parses primary expressions
-    private parse_primary_expr (): Expr {
+    private parse_primary_expr(): Expr {
         const tk = this.at().type;
 
         switch (tk) {
@@ -605,7 +605,7 @@ export default class Parser {
                     kind: "NumericLiteral",
                     value: parseFloat(this.eat().value)
                 } as NumericLiteral;
-            
+
             case TokenType.String:
                 return {
                     kind: "StringLiteral",
